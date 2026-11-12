@@ -1,0 +1,6 @@
+.venv/
+__pycache__/
+.aegle/
+*.sqlite3
+.pytest_cache/
+.review/

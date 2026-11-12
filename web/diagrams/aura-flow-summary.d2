@@ -1,0 +1,55 @@
+direction: right
+vars: {
+  d2-config: {
+    layout-engine: elk
+    theme-id: 0
+  }
+}
+
+classes: {
+  node: {
+    style: {
+      fill: "#0F2537"
+      stroke: "#2B7A8B"
+      font-color: "#F8F7F4"
+      stroke-width: 2
+      border-radius: 6
+      font-size: 34
+    }
+  }
+  output: {
+    style: {
+      fill: "#0F2537"
+      stroke: "#2B7A8B"
+      font-color: "#F8F7F4"
+      stroke-width: 2
+      border-radius: 6
+      font-size: 34
+    }
+  }
+}
+
+tpa: TPA Packet { class: node }
+ocr: Mistral OCR 4.1 { class: node }
+core: Fireworks + MCP { class: node }
+sanitizer: Zero-PHI Sanitizer { class: node }
+out: HubSpot · Growth · Finance · TPA { class: output }
+
+tpa -> ocr: Page-Anchored .md {
+  style.stroke: "#2B7A8B"
+  style.font-color: "#0F2537"
+  style.font-size: 20
+}
+ocr -> core {
+  style.stroke: "#2B7A8B"
+}
+core -> sanitizer: Verified math {
+  style.stroke: "#2B7A8B"
+  style.font-color: "#0F2537"
+  style.font-size: 20
+}
+sanitizer -> out: De-identified {
+  style.stroke: "#2B7A8B"
+  style.font-color: "#0F2537"
+  style.font-size: 20
+}
