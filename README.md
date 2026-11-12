@@ -159,26 +159,6 @@ No other cost, speed, or accuracy table is claimed.
 
 ---
 
-## Verify the claims
-
-- Mistral OCR 4.1: https://docs.mistral.ai/models/ocr-4-1
-- Mistral zero data retention: https://docs.mistral.ai/admin/monitor-comply/zero-data-retention
-- Mistral Trust Center: https://trust.mistral.ai/
-- Fireworks US-only serverless: https://docs.fireworks.ai/serverless/us-only-serverless
-- Fireworks data handling / ZDR: https://docs.fireworks.ai/guides/security_compliance/data_handling
-- Fireworks serverless pricing: https://docs.fireworks.ai/serverless/pricing
-- HubSpot custom objects: https://developers.hubspot.com/docs/guides/api/crm/objects/custom-objects
-- CMS NCD 110.24: https://www.cms.gov/medicare-coverage-database/view/ncd.aspx?ncdid=374
-- openFDA: https://open.fda.gov/
-- CourtListener: https://www.courtlistener.com/help/
-- eCFR Title 29: https://www.ecfr.gov/current/title-29
-- Artificial Analysis Legal Index: https://artificialanalysis.ai/indexes/legal
-- PDF.js: https://mozilla.github.io/pdf.js/
-
-BAA terms are contractual; public vendor docs document ZDR and HIPAA support, not an executed BAA.
-
----
-
 ## Rollout
 
 1. **Phase 1 — Self-Hosted LibreChat + Legal Verification Tools.** An internal, zero-PHI workspace wired to serverless OCR, Fireworks AI (BAA + ZDR), and the verification tools. Analysts inspect tool calls and citations during packet review.

@@ -229,7 +229,7 @@ Funding turnaround: <n> h
 Open issue: <issue> — root cause: <cause>
 MBR status: <ON_TRACK | AT_RISK> — next MBR: <date or unknown>
 Draft advance: $<amount> (draft only)
-Human sign-off: <reviewer> → <approver>; nothing sent or written before that
+Human sign-off: <reviewer>  <approver>; nothing sent or written before that
 HubSpot: staged, dry=true, PENDING_APPROVAL (no write performed)
 ```
 
