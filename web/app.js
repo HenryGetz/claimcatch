@@ -5,6 +5,10 @@
 "use strict";
 
 (function () {
+  if (window.pdfjsLib && window.pdfjsLib.GlobalWorkerOptions) {
+    window.pdfjsLib.GlobalWorkerOptions.workerSrc = "vendor/pdfjs/pdf.worker.min.js";
+  }
+
   /* ------------------------------------------------------------------ */
   /* Data                                                                */
   /* ------------------------------------------------------------------ */
@@ -24,68 +28,75 @@
     reimbursable: 1950000
   };
 
-  const BENCHMARK_DATA = {
-    domainAccuracy: {
-      title: "Domain Accuracy",
-      tag: "CLAIMCATCH 12-FIELD ADJUDICATION BENCHMARK",
-      note: "Evaluated across 12 stop-loss adjudication fields (Specific Deductible, Endorsement Lasers, UB-04 FL47/FL48 cross-footing, CMS NCD 110.24, and Section D signatures) with mandatory human sign-off.",
-      items: [
-        { label: "Frontier + MCP", value: 94, tone: "#2B7A8B" },
-        { label: "Human specialist", value: 82, tone: "#6B7F8C" }
-      ]
-    },
-    costIntelligence: {
-      title: "Cost vs Effective Adjudication Accuracy",
-      tag: "CLAIMCATCH 12-FIELD ADJUDICATION BENCHMARK",
-      source: "Source: ClaimCatch 12-field adjudication benchmark; cost per task from Artificial Analysis Intelligence Index v5.0.1, accessed 12 Nov 2026.",
-      callout: "94% Effective Domain Accuracy · $0.60/task · ~40x lower cost than unassisted proprietary frontier models",
-      points: [
-        { label: "Fireworks AI + FastMCP", cost: 0.60, score: 94, tone: "#2B7A8B", highlight: true },
-        { label: "Unassisted DeepSeek V4.1", cost: 0.60, score: 82, tone: "#6B7F8C" },
-        { label: "Unassisted GPT-6.1 Sol", cost: 1.27, score: 84, tone: "#192E58" },
-        { label: "Unassisted Kimi K3.1", cost: 3.68, score: 85, tone: "#192E58" },
-        { label: "Unassisted Gemini 4 Carbon", cost: 7.76, score: 87, tone: "#192E58" },
-        { label: "Unassisted Claude Opus 5.5", cost: 10.04, score: 88, tone: "#192E58" },
-        { label: "Unassisted Claude Fable 5.2", cost: 26.54, score: 90, tone: "#192E58" }
-      ]
-    }
+  const LEGAL_BENCHMARK = {
+    title: "Artificial Analysis Legal Index",
+    url: "https://artificialanalysis.ai/indexes/legal",
+    callout:
+      "DeepSeek V4.1 Flash: ~195 legal-index points per $1. Claude Fable 5.2: 4.0 — 81× the cost for 25.6 more points. The cheapest per point is not the most capable: 38 vs 63.",
+    source:
+      "Source: Artificial Analysis Legal Index, accessed 12 Nov 2026. Cost per legal task is AA's benchmark spend, not Aegle's per-claim economics.",
+    points: [
+      { label: "DeepSeek V4.1 Flash", provider: "Fireworks", score: 38, cost: 0.19, tone: "#2B7A8B", highlight: true },
+      { label: "Kimi K3.1 Pro", provider: "Fireworks", score: 49, cost: 1.97, tone: "#192E58" },
+      { label: "Gemini 4 Carbon", score: 62, cost: 2.57, tone: "#6B7F8C" },
+      { label: "Claude Fable 5.2", score: 63, cost: 15.67, tone: "#192E58" }
+    ]
   };
 
-  const STREAM_STEPS = [
-    {
-      id: "ocr",
-      num: "01",
-      at: 0,
-      doneAt: 1400,
-      title: "Mistral OCR 4.1 (ZDR Stateless /v1/ocr) — 312 pages converted to page-anchored Markdown",
-      detail: "",
-      doneDetail: ""
-    },
-    {
-      id: "cms",
-      num: "02",
-      at: 2800,
-      title: "MCP: check_cms_coverage_and_fda",
-      detail:
-        "Q2042 Kymriah <b>$475,000</b> covered under CMS NCD 110.24; Rev 0256 / J9999 <b>$235,000</b> experimental CD22 trial; <b>$115,000</b> off-label/luxury lines flagged."
-    },
-    {
-      id: "laser",
-      num: "03",
-      at: 4200,
-      title: "MCP: check_policy_lasers",
-      detail:
-        '<span class="alert-word">ALERT</span> Endorsement L-1 on Page 7; <b>$750,000</b> separate specific deductible; <b>$500,000</b> non-curable gap.'
-    },
-    {
-      id: "funding",
-      num: "04",
-      at: 5600,
-      title: "MCP: reconcile_funding_tranche",
-      detail:
-        "Safe Tranche 1 <b>$1,700,000</b>; <b>$250,000</b> held for missing CFO + carrier signatures."
-    }
-  ];
+  const DEMO_STATS = { pages: 312, files: 4, real: false };
+
+  function pdfLabel(count) {
+    return count + " PDF" + (count === 1 ? "" : "s");
+  }
+
+  function pageLabel(count) {
+    return count + " page" + (count === 1 ? "" : "s");
+  }
+
+  function buildStreamSteps(pages, files) {
+    return [
+      {
+        id: "ocr",
+        num: "01",
+        at: 0,
+        doneAt: 1400,
+        title:
+          "Mistral OCR 4.1 (ZDR Stateless /v1/ocr) — " +
+          pages +
+          " pages across " +
+          files +
+          " " +
+          (files === 1 ? "PDF" : "PDFs") +
+          " converted to page-anchored Markdown",
+        detail: "",
+        doneDetail: ""
+      },
+      {
+        id: "cms",
+        num: "02",
+        at: 2800,
+        title: "Verification: CMS & FDA",
+        detail:
+          "Q2042 Kymriah <b>$475,000</b> covered under CMS NCD 110.24; Rev 0256 / J9999 <b>$235,000</b> experimental CD22 trial; <b>$115,000</b> off-label/luxury lines flagged."
+      },
+      {
+        id: "laser",
+        num: "03",
+        at: 4200,
+        title: "Verification: policy laser",
+        detail:
+          '<span class="alert-word">ALERT</span> Endorsement L-1 on Page 7; <b>$750,000</b> separate specific deductible; <b>$500,000</b> non-curable gap.'
+      },
+      {
+        id: "funding",
+        num: "04",
+        at: 5600,
+        title: "Verification: funding math",
+        detail:
+          "Safe Tranche 1 <b>$1,700,000</b>; <b>$250,000</b> held for missing CFO + carrier signatures."
+      }
+    ];
+  }
 
   const STREAM_DURATION = 7200;
 
@@ -269,7 +280,7 @@ authorization PA-9941-0926.</pre>
           <div class="doc-row"><span class="k">Employer / policyholder</span><span class="v">Midwest Precision Manufacturing LLC</span><span></span></div>
           <div class="doc-row"><span class="k">Policy</span><span class="v">MPM-SL-2026-0147</span><span></span></div>
           <div class="doc-row"><span class="k">Advance requested</span><span class="v">$2,800,000</span><span></span></div>
-          <div class="doc-row"><span class="k">Tranche 1</span><span class="v">$1,700,000</span><span>Approved</span></div>
+          <div class="doc-row"><span class="k">Tranche 1</span><span class="v">$1,700,000</span><span>Draft advance</span></div>
           <div class="doc-row"><span class="k">Tranche 2</span><span class="v">$250,000</span><span>Held</span></div>
           <div class="doc-rule"></div>
           <p class="doc-sub">SECTION D — CERTIFICATIONS AND SIGNATURES</p>
@@ -293,7 +304,7 @@ authorization PA-9941-0926.</pre>
 Employer / policyholder ... Midwest Precision Manufacturing LLC
 Policy .................... MPM-SL-2026-0147
 Advance requested ......... $2,800,000
-Tranche 1 ................. $1,700,000  approved
+Tranche 1 ................. $1,700,000  draft advance
 Tranche 2 ................. $250,000    held
 
 ## SECTION D — CERTIFICATIONS AND SIGNATURES
@@ -328,7 +339,16 @@ Both Section D defects gate the same $250,000 Tranche 2.</pre>
     dropzone: $("#dropzone"),
     fileInput: $("#fileInput"),
     fileLine: $("#fileLine"),
+    fileMeta: $("#fileMeta"),
     fileName: $("#fileName"),
+    parseLine: $("#parseLine"),
+    pdfState: $("#pdfState"),
+    pdfChip: $("#pdfChip"),
+    pdfPreview: $("#pdfPreview"),
+    pdfPreviewText: $("#pdfPreviewText"),
+    pdfPageTags: $("#pdfPageTags"),
+    workbenchUploadMarker: $("#workbenchUploadMarker"),
+    workbenchUploadMeta: $("#workbenchUploadMeta"),
     skipWorkbench: $("#skipWorkbench"),
     skipStream: $("#skipStream"),
     streamLog: $("#streamLog"),
@@ -336,6 +356,7 @@ Both Section D defects gate the same $250,000 Tranche 2.</pre>
     streamPct: $("#streamPct"),
     streamBar: $("#streamBar"),
     streamFile: $("#streamFile"),
+    streamTitle: $("#stream-title"),
     newClaim: $("#newClaimBtn"),
     rerun: $("#rerunBtn"),
     heroAmount: $("#heroAmount"),
@@ -369,7 +390,6 @@ Both Section D defects gate the same $250,000 Tranche 2.</pre>
     hsStageHuman: $("#hsStageHuman"),
     hsStageCode: $("#hsStageCode"),
     hsHealth: $("#hsHealth"),
-    routeLockton: $("#routeLockton"),
     rawToggle: $("#rawToggle"),
     rawPayload: $("#rawPayload"),
     rawCode: $("#rawCode"),
@@ -436,8 +456,11 @@ Both Section D defects gate the same $250,000 Tranche 2.</pre>
     pushedStageCode: null,
     pushedApproved: null,
     pushCount: 0,
-    routedAt: null,
-    rawOpen: false
+    rawOpen: false,
+    parsing: false,
+    parseToken: 0,
+    parseHold: null,
+    upload: null
   };
 
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -548,15 +571,15 @@ Both Section D defects gate the same $250,000 Tranche 2.</pre>
       approved: cured ? AMOUNTS.curedApproved : AMOUNTS.tranche1,
       hold: cured ? 0 : AMOUNTS.hold,
       gap: AMOUNTS.requested - (cured ? AMOUNTS.curedApproved : AMOUNTS.tranche1),
-      stage: cured ? "approved_for_funding" : "adjudication_hold_laser_flagged",
+      stage: cured ? "ready_for_human_signoff" : "adjudication_hold_laser_flagged",
       stageHuman: cured
-        ? "Approved for funding"
+        ? "Ready for human sign-off"
         : "Adjudication hold — laser flagged",
       mbrStatus: cured ? "ON_TRACK" : "AT_RISK",
       healthHuman: cured ? "On track" : "At risk",
       missingEmployer: !cured,
       missingCarrier: !cured,
-      status: cured ? "READY_FOR_DISBURSEMENT" : "PENDING_APPROVAL"
+      status: cured ? "READY_FOR_HUMAN_SIGNOFF" : "PENDING_APPROVAL"
     };
   }
 
@@ -593,15 +616,6 @@ Both Section D defects gate the same $250,000 Tranche 2.</pre>
       partner_health: {
         funding_turnaround_hours: 24,
         mbr_status: cs.mbrStatus
-      },
-      growth_expansion_signal: {
-        signal: "LASER_SHOCK",
-        exposure: AMOUNTS.laserGap,
-        broker: "Lockton / Prairie States TPA",
-        pitch: "Aegle Plan Protection / Captive layer",
-        broker_follow_up: true,
-        broker_routed: Boolean(state.routedAt),
-        broker_routed_at: state.routedAt || null
       },
       phi_scan: {
         result: "PASS",
@@ -647,12 +661,6 @@ Both Section D defects gate the same $250,000 Tranche 2.</pre>
     els.push.classList.toggle("btn-primary", cs.cured);
     els.push.classList.toggle("btn-ghost-dark", !cs.cured);
 
-    if (state.routedAt) {
-      els.routeLockton.textContent = "Routed · " + state.routedAt;
-    } else {
-      els.routeLockton.textContent = "Route to Lockton";
-    }
-
     if (!cs.cured) {
       els.reviewTraps.textContent = "Review traps & cure hold";
       els.reviewTraps.setAttribute("href", "#evidence");
@@ -679,31 +687,31 @@ Both Section D defects gate the same $250,000 Tranche 2.</pre>
     els.timelineCure.classList.toggle("timeline-ready", cs.cured);
 
     els.trapsTitle.textContent = cs.cured
-      ? "Two hard exclusions explain $850,000; $250,000 released."
+      ? "Two hard exclusions explain $850,000; $250,000 ready for sign-off."
       : "Three findings explain the $1,100,000 gap.";
 
     els.equation.textContent = cs.cured
       ? "Billed " + money(AMOUNTS.billed) + " − FL48 " + money(AMOUNTS.fl48) +
         " = eligible " + money(AMOUNTS.eligible) + "; less L-1 " +
         money(AMOUNTS.laserDeductible) + " = " + money(AMOUNTS.reimbursable) +
-        " reimbursable; hold released = " + money(cs.approved) + " approved."
+        " reimbursable; hold cleared = " + money(cs.approved) + " draft advance."
       : "Billed " + money(AMOUNTS.billed) + " − FL48 " + money(AMOUNTS.fl48) +
         " = eligible " + money(AMOUNTS.eligible) + "; less L-1 " +
         money(AMOUNTS.laserDeductible) + " = " + money(AMOUNTS.reimbursable) +
         " reimbursable; less hold " + money(AMOUNTS.hold) + " = " +
-        money(cs.approved) + " approved.";
+        money(cs.approved) + " draft advance.";
 
     els.segApproved.style.width = barPct(cs.approved).toFixed(2) + "%";
     els.segHold.style.width = barPct(cs.hold).toFixed(2) + "%";
     els.segApprovedLabel.textContent =
-      "$" + (cs.approved / 1000000).toFixed(2) + "M approved";
+      "$" + (cs.approved / 1000000).toFixed(2) + "M draft";
     els.segHoldLabel.textContent = cs.hold ? "$250k" : "$0";
     els.legendApproved.textContent = money(cs.approved);
     els.legendHold.textContent = money(cs.hold);
     els.stackBar.setAttribute(
       "aria-label",
       "Attribution of $3,050,000 billed: " + money(cs.approved) +
-        " approved, " + money(cs.hold) + " signature hold, " +
+        " draft, " + money(cs.hold) + " signature hold, " +
         "$500,000 laser gap, $350,000 FL48 excluded, $250,000 base deductible."
     );
 
@@ -711,13 +719,13 @@ Both Section D defects gate the same $250,000 Tranche 2.</pre>
     els.trap3Tag.classList.toggle("tag-cure", !cs.cured);
     els.trap3Tag.classList.toggle("tag-cured", cs.cured);
     els.trap3Sub.textContent = cs.cured
-      ? "$250,000 included in approved advance; signatures on file"
-      : "Tranche 2 releases when both Section D defects cure";
+      ? "$250,000 included in draft advance; signatures on file"
+      : "Tranche 2 clears for human sign-off when both Section D defects cure";
 
     setMoney(els.approvedOut, cs.approved, animate);
     setMoney(els.holdOut, cs.hold, animate);
     els.holdOut.style.color = cs.cured ? "var(--teal)" : "";
-    els.t2Status.textContent = cs.cured ? "READY FOR DISBURSEMENT" : "HELD";
+    els.t2Status.textContent = cs.cured ? "READY FOR HUMAN SIGN-OFF" : "HELD";
     els.t2Status.classList.toggle("chip-ready", cs.cured);
     els.t2Status.classList.toggle("chip-held", !cs.cured);
     els.progressPill.textContent = cs.signatures + "/2";
@@ -730,101 +738,67 @@ Both Section D defects gate the same $250,000 Tranche 2.</pre>
     els.hsHealth.classList.toggle("is-ok", cs.cured);
 
     els.resolutionTitle.textContent = cs.cured
-      ? "Hold resolved. Tranche 2 ready."
-      : "Resolve the hold. Move the money.";
+      ? "Hold resolved. Ready for human sign-off."
+      : "Resolve the hold. Prepare the sign-off.";
     els.resolutionDesc.textContent = cs.cured
-      ? "Approved advance is $1,950,000; both signatures are on file."
-      : "Tranche 2 is held pending two signatures. Approved advance is $1,700,000.";
+      ? "Draft advance is $1,950,000; both signatures are on file, pending human sign-off."
+      : "Tranche 2 is held pending two signatures. Draft advance is $1,700,000.";
 
     els.rawCode.textContent = JSON.stringify(buildPayload(cs), null, 2);
     updateActionLabels(cs);
   }
 
-  function renderDomainAccuracy(data) {
-    const W = 360;
-    const H = 188;
-    const left = 118;
-    const right = 34;
-    const top = 16;
-    const barH = 26;
-    const gap = 26;
-    const plotW = W - left - right;
-    const family = 'Montserrat, Arial, sans-serif';
-    let out = '<svg viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg" role="img" focusable="false">';
-    data.items.forEach(function (item, index) {
-      const y = top + index * (barH + gap);
-      const width = (plotW * item.value) / 100;
-      out += '<text x="0" y="' + (y + 18) + '" fill="#192E58" font-family="' + family + '" font-size="11" font-weight="600">' + item.label + '</text>';
-      out += '<rect x="' + left + '" y="' + y + '" width="' + plotW + '" height="' + barH + '" rx="3" fill="#E8ECF0"></rect>';
-      out += '<rect x="' + left + '" y="' + y + '" width="' + width.toFixed(1) + '" height="' + barH + '" rx="3" fill="' + item.tone + '"></rect>';
-      out += '<text x="' + (left + width + 7) + '" y="' + (y + 18) + '" fill="#192E58" font-family="' + family + '" font-size="11" font-weight="700">' + item.value + '%</text>';
-    });
-    const axisY = top + 2 * (barH + gap) + 2;
-    out += '<line x1="' + left + '" y1="' + axisY + '" x2="' + (W - right) + '" y2="' + axisY + '" stroke="#C9CED6"></line>';
-    [0, 50, 100].forEach(function (tick) {
-      const x = left + (plotW * tick) / 100;
-      out += '<line x1="' + x + '" y1="' + axisY + '" x2="' + x + '" y2="' + (axisY + 4) + '" stroke="#C9CED6"></line>';
-      out += '<text x="' + x + '" y="' + (axisY + 15) + '" text-anchor="middle" fill="#6F7680" font-family="' + family + '" font-size="10">' + tick + '%</text>';
-    });
-    out += '</svg>';
-    return out;
-  }
-
-  function renderCostIntelligence(data) {
-    const W = 360;
-    const H = 300;
-    const left = 42;
-    const right = 12;
-    const top = 24;
-    const bottom = 46;
+  function renderLegalIndex(data) {
+    const W = 900;
+    const H = 360;
+    const left = 64;
+    const right = 30;
+    const top = 30;
+    const bottom = 62;
     const plotW = W - left - right;
     const plotH = H - top - bottom;
     const family = 'Montserrat, Arial, sans-serif';
-    const logMin = Math.log10(0.5);
-    const logMax = Math.log10(30);
+    const logMin = Math.log10(0.1);
+    const logMax = Math.log10(20);
     const x = function (cost) {
       return left + ((Math.log10(cost) - logMin) / (logMax - logMin)) * plotW;
     };
     const y = function (score) {
-      return top + ((100 - score) / 30) * plotH;
+      return top + ((70 - score) / 40) * plotH;
     };
     let out = '<svg viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg" role="img" focusable="false">';
 
-    // Optimal frontier zone around Fireworks + FastMCP.
-    const zoneRight = x(1.0);
-    const zoneTop = y(100);
-    const zoneBottom = y(88);
-    out += '<rect x="' + left + '" y="' + zoneTop + '" width="' + (zoneRight - left) + '" height="' + (zoneBottom - zoneTop) + '" rx="4" fill="#2B7A8B" opacity="0.10"></rect>';
-    out += '<rect x="' + left + '" y="' + zoneTop + '" width="' + (zoneRight - left) + '" height="' + (zoneBottom - zoneTop) + '" rx="4" fill="none" stroke="#2B7A8B" stroke-width="1" stroke-dasharray="3 3" opacity="0.6"></rect>';
-    out += '<text x="' + (left + 6) + '" y="' + (zoneTop + 11) + '" fill="#2B7A8B" font-family="' + family + '" font-size="8" font-weight="700" letter-spacing="0.5">OPTIMAL FRONTIER</text>';
-
-    [70, 80, 90, 100].forEach(function (tick) {
+    [30, 40, 50, 60, 70].forEach(function (tick) {
       const py = y(tick);
       out += '<line x1="' + left + '" y1="' + py + '" x2="' + (W - right) + '" y2="' + py + '" stroke="#E3E7EC"></line>';
-      out += '<text x="' + (left - 7) + '" y="' + (py + 3) + '" text-anchor="end" fill="#6F7680" font-family="' + family + '" font-size="10">' + tick + '</text>';
+      out += '<text x="' + (left - 9) + '" y="' + (py + 4) + '" text-anchor="end" fill="#6F7680" font-family="' + family + '" font-size="11">' + tick + '</text>';
     });
 
-    [0.5, 1, 3, 10, 30].forEach(function (tick) {
+    [0.1, 0.3, 1, 3, 10, 20].forEach(function (tick) {
       const px = x(tick);
-      const label = tick < 1 ? "$0.50" : "$" + tick;
+      const label = tick < 1 ? "$" + tick.toFixed(2) : "$" + tick;
       out += '<line x1="' + px + '" y1="' + top + '" x2="' + px + '" y2="' + (top + plotH) + '" stroke="#E3E7EC"></line>';
-      out += '<text x="' + px + '" y="' + (top + plotH + 15) + '" text-anchor="middle" fill="#6F7680" font-family="' + family + '" font-size="10">' + label + '</text>';
+      out += '<text x="' + px + '" y="' + (top + plotH + 17) + '" text-anchor="middle" fill="#6F7680" font-family="' + family + '" font-size="11">' + label + '</text>';
     });
 
     out += '<line x1="' + left + '" y1="' + (top + plotH) + '" x2="' + (W - right) + '" y2="' + (top + plotH) + '" stroke="#C9CED6"></line>';
-    out += '<text x="' + (left + plotW / 2) + '" y="' + (H - 6) + '" text-anchor="middle" fill="#6F7680" font-family="' + family + '" font-size="10">Cost per task (log scale)</text>';
-    out += '<text x="10" y="' + (top + plotH / 2) + '" transform="rotate(-90 10 ' + (top + plotH / 2) + ')" text-anchor="middle" fill="#6F7680" font-family="' + family + '" font-size="10">Effective adjudication score</text>';
+    out += '<text x="' + (left + plotW / 2) + '" y="' + (H - 8) + '" text-anchor="middle" fill="#6F7680" font-family="' + family + '" font-size="11">AA Legal Cost per Task (log)</text>';
+    out += '<text x="17" y="' + (top + plotH / 2) + '" transform="rotate(-90 17 ' + (top + plotH / 2) + ')" text-anchor="middle" fill="#6F7680" font-family="' + family + '" font-size="11">AA Legal Index Score</text>';
+
+    // Pareto line: DeepSeek -> Kimi -> Gemini -> Claude.
+    const pareto = data.points.slice().sort(function (a, b) { return a.cost - b.cost; });
+    const points = pareto.map(function (point) {
+      return x(point.cost).toFixed(1) + ',' + y(point.score).toFixed(1);
+    }).join(' ');
+    out += '<polyline points="' + points + '" fill="none" stroke="#2B7A8B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.8"></polyline>';
 
     data.points.forEach(function (point) {
       const px = x(point.cost);
       const py = y(point.score);
       if (point.highlight) {
-        out += '<circle cx="' + px + '" cy="' + py + '" r="12" fill="#2B7A8B" opacity="0.18"></circle>';
-        out += '<circle cx="' + px + '" cy="' + py + '" r="7" fill="' + point.tone + '" stroke="#F8F7F4" stroke-width="2"></circle>';
-        out += '<text x="' + (px + 10) + '" y="' + (py + 3) + '" fill="#2B7A8B" font-family="' + family + '" font-size="10" font-weight="700">Fireworks + FastMCP</text>';
-      } else {
-        out += '<circle cx="' + px + '" cy="' + py + '" r="5.5" fill="' + point.tone + '" stroke="#F8F7F4" stroke-width="1.8"></circle>';
+        out += '<circle cx="' + px + '" cy="' + py + '" r="13" fill="#2B7A8B" opacity="0.16"></circle>';
       }
+      out += '<circle cx="' + px + '" cy="' + py + '" r="' + (point.highlight ? 7 : 5.5) + '" fill="' + point.tone + '" stroke="#F8F7F4" stroke-width="2"></circle>';
     });
 
     out += '</svg>';
@@ -832,30 +806,19 @@ Both Section D defects gate the same $250,000 Tranche 2.</pre>
   }
 
   function renderBenchmarks() {
-    const domain = BENCHMARK_DATA.domainAccuracy;
-    const cost = BENCHMARK_DATA.costIntelligence;
-    const domainChart = document.getElementById("benchDomainChart");
-    const costChart = document.getElementById("benchCostChart");
-    if (domainChart) domainChart.innerHTML = renderDomainAccuracy(domain);
-    if (costChart) costChart.innerHTML = renderCostIntelligence(cost);
-
-    const domainNote = document.getElementById("benchDomainNote");
+    const data = LEGAL_BENCHMARK;
+    const chart = document.getElementById("benchLegalChart");
+    const legend = document.getElementById("benchLegalLegend");
     const source = document.getElementById("benchSource");
-    const legend = document.getElementById("benchLegend");
-    const callout = document.getElementById("benchCostCallout");
-    const domainTag = document.getElementById("benchDomainTag");
-    const costTag = document.getElementById("benchCostTag");
-    if (domainTag) domainTag.textContent = domain.tag;
-    if (costTag) costTag.textContent = cost.tag;
-    if (domainNote) domainNote.textContent = domain.note;
-    if (source) source.textContent = cost.source;
-    if (callout) callout.textContent = cost.callout;
+    const callout = document.getElementById("benchCallout");
+    if (chart) chart.innerHTML = renderLegalIndex(data);
     if (legend) {
-      legend.innerHTML = cost.points.map(function (point) {
-        const value = point.score + "% · $" + point.cost.toFixed(2);
-        return '<li><span class="bench-dot" style="background:' + point.tone + '"></span><span class="bench-model">' + point.label + '</span><span class="bench-value">' + value + '</span></li>';
+      legend.innerHTML = data.points.map(function (point) {
+        return '<li><span class="bench-dot" style="background:' + point.tone + '"></span><span class="bench-model">' + point.label + '</span><span class="bench-value">' + point.score + ' · $' + point.cost.toFixed(2) + (point.provider ? ' · ' + point.provider : '') + '</span></li>';
       }).join("");
     }
+    if (source) source.textContent = data.source;
+    if (callout) callout.textContent = data.callout;
   }
 
   /* ------------------------------------------------------------------ */
@@ -887,10 +850,10 @@ Both Section D defects gate the same $250,000 Tranche 2.</pre>
     }
   }
 
-  function renderStreamSteps() {
+  function renderStreamSteps(steps) {
     els.streamLog.innerHTML = "";
     els.streamLog.setAttribute("aria-busy", "true");
-    STREAM_STEPS.forEach(function (step) {
+    steps.forEach(function (step) {
       const li = document.createElement("li");
       li.className = "stream-step is-pending";
       li.setAttribute("data-step", step.id);
@@ -944,23 +907,58 @@ Both Section D defects gate the same $250,000 Tranche 2.</pre>
     }
   }
 
-  function startStream(fileName) {
+  function demoStats() {
+    return { pages: DEMO_STATS.pages, files: DEMO_STATS.files, real: false };
+  }
+
+  function uploadedStats() {
+    if (!state.upload) return null;
+    return { pages: state.upload.pages, files: state.upload.files, real: true };
+  }
+
+  function clearParseHold() {
+    if (state.parseHold) {
+      window.clearTimeout(state.parseHold);
+      state.parseHold = null;
+    }
+  }
+
+  function updateWorkbenchMarker(stats) {
+    if (!els.workbenchUploadMarker || !els.workbenchUploadMeta) return;
+    const real = !!(stats && stats.real);
+    els.workbenchUploadMarker.hidden = !real;
+    els.workbenchUploadMarker.title = real
+      ? "PDF files were parsed locally; adjudication figures remain the synthetic Claim #9941 demo."
+      : "";
+    els.workbenchUploadMeta.textContent = real
+      ? "LOCAL PDF · " + pageLabel(stats.pages).toUpperCase() + " · " + (stats.files + " FILE" + (stats.files === 1 ? "" : "S"))
+      : "";
+  }
+
+  function startStream(fileName, stats) {
+    clearParseHold();
+    stats = stats || demoStats();
     stopStream();
     resetStreamUI();
     els.intake.hidden = true;
     els.stream.hidden = false;
     els.workbench.hidden = true;
     window.scrollTo(0, 0);
+    if (els.streamTitle) {
+      els.streamTitle.textContent = stats.real ? "Reading local PDF packet" : "Reading Claim #9941";
+    }
+    updateWorkbenchMarker(stats);
 
     if (fileName) {
       els.streamFile.hidden = false;
       els.streamFile.textContent = "Packet: " + fileName;
     }
 
-    renderStreamSteps();
+    const steps = buildStreamSteps(stats.pages, stats.files);
+    renderStreamSteps(steps);
     state.streamStart = performance.now();
 
-    STREAM_STEPS.forEach(function (step) {
+    steps.forEach(function (step) {
       state.streamTimers.push(
         window.setTimeout(function () {
           activateStreamStep(step.id, step.detail);
@@ -1015,6 +1013,7 @@ Both Section D defects gate the same $250,000 Tranche 2.</pre>
   }
 
   function skipToWorkbench() {
+    clearParseHold();
     stopStream();
     els.streamLog.setAttribute("aria-busy", "false");
     showWorkbench();
@@ -1024,15 +1023,227 @@ Both Section D defects gate the same $250,000 Tranche 2.</pre>
     updateNavActive("workbench");
   }
 
-  function handleFile(file) {
-    if (!file) return;
-    els.fileName.textContent = file.name;
-    els.fileLine.hidden = false;
-    startStream(file.name);
+  function formatMegabytes(bytes) {
+    const mb = bytes / (1024 * 1024);
+    return (mb >= 1 ? mb.toFixed(1) : mb.toFixed(3)) + " MB";
+  }
+
+  function hasPdfMagic(bytes) {
+    return (
+      bytes.length >= 5 &&
+      bytes[0] === 0x25 &&
+      bytes[1] === 0x50 &&
+      bytes[2] === 0x44 &&
+      bytes[3] === 0x46 &&
+      bytes[4] === 0x2d
+    );
+  }
+
+  function resetUploadState() {
+    state.parseToken += 1;
+    state.parsing = false;
+    clearParseHold();
+    state.upload = null;
+    els.fileLine.hidden = true;
+    els.fileMeta.textContent = "";
+    els.fileName.textContent = "";
+    els.fileInput.value = "";
+    els.parseLine.hidden = true;
+    els.parseLine.textContent = "";
+    els.pdfState.hidden = true;
+    els.pdfPreview.open = false;
+    els.pdfPreviewText.textContent = "";
+    els.pdfPageTags.innerHTML = "";
+    els.dropzone.removeAttribute("aria-busy");
+    updateWorkbenchMarker(null);
+  }
+
+  function setParsingStatus(fileCount, pages) {
+    els.parseLine.hidden = false;
+    els.parseLine.textContent =
+      "Parsing " + pdfLabel(fileCount) + "…" + (pages ? " " + pageLabel(pages) : "");
+  }
+
+  async function sha256Preview(bytes) {
+    if (typeof bytes === "undefined") return null;
+    try {
+      if (!(window.crypto && window.crypto.subtle && window.crypto.subtle.digest)) return null;
+      const digest = await window.crypto.subtle.digest("SHA-256", bytes);
+      return Array.prototype.slice
+        .call(new Uint8Array(digest), 0, 6)
+        .map(function (byte) {
+          return byte.toString(16).padStart(2, "0");
+        })
+        .join("");
+    } catch (error) {
+      return null;
+    }
+  }
+
+  async function parsePdfFiles(files) {
+    if (state.parsing) {
+      toast("Parsing already in progress", "Wait for the current PDF parse to finish.");
+      return;
+    }
+    if (!window.pdfjsLib) {
+      toast("PDF parser unavailable", "The local PDF.js runtime did not load. Reload and try again.");
+      return;
+    }
+
+    resetUploadState();
+    const token = state.parseToken;
+    state.parsing = true;
+    els.dropzone.setAttribute("aria-busy", "true");
+    setParsingStatus(files.length, 0);
+
+    try {
+      const entries = [];
+      let totalBytes = 0;
+      for (let index = 0; index < files.length; index += 1) {
+        const file = files[index];
+        if (!/\.pdf$/i.test(file.name) && file.type !== "application/pdf") {
+          throw new Error(file.name + " is not a PDF file.");
+        }
+        const bytes = new Uint8Array(await file.arrayBuffer());
+        if (!hasPdfMagic(bytes)) {
+          throw new Error(file.name + " is not a valid PDF (missing %PDF- header).");
+        }
+        entries.push({ file: file, bytes: bytes });
+        totalBytes += bytes.byteLength;
+      }
+
+      if (token !== state.parseToken) return;
+
+      const combined = new Uint8Array(totalBytes);
+      let offset = 0;
+      entries.forEach(function (entry) {
+        combined.set(entry.bytes, offset);
+        offset += entry.bytes.byteLength;
+      });
+      const hash = await sha256Preview(combined);
+      if (token !== state.parseToken) return;
+
+      const pages = [];
+      const firstPageTexts = [];
+      let totalPages = 0;
+
+      for (let entryIndex = 0; entryIndex < entries.length; entryIndex += 1) {
+        const entry = entries[entryIndex];
+        const loadingTask = window.pdfjsLib.getDocument({
+          data: entry.bytes.slice(),
+          isEvalSupported: false
+        });
+        const pdf = await loadingTask.promise;
+        try {
+          for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber += 1) {
+            if (token !== state.parseToken) return;
+            const page = await pdf.getPage(pageNumber);
+            const textContent = await page.getTextContent();
+            let text = "";
+            textContent.items.forEach(function (item) {
+              if (typeof item.str === "string") {
+                text += item.str;
+                text += item.hasEOL ? "\n" : " ";
+              }
+            });
+            text = text.replace(/[ \t]+/g, " ").replace(/\s*\n\s*/g, "\n").trim();
+            if (entryIndex === 0 && pageNumber === 1) firstPageTexts.push(text);
+            totalPages += 1;
+            pages.push({
+              file: entry.file.name,
+              filePage: pageNumber,
+              page: totalPages
+            });
+            setParsingStatus(files.length, totalPages);
+            page.cleanup();
+          }
+        } finally {
+          try {
+            await pdf.destroy();
+          } catch (error) {
+            /* Ignore teardown errors after a successful extraction. */
+          }
+        }
+      }
+
+      if (token !== state.parseToken) return;
+
+      const hashLabel = hash ? "SHA-256 " + hash + "…" : "hash unavailable";
+      const summary =
+        pdfLabel(entries.length) +
+        " · " +
+        pageLabel(totalPages) +
+        " · " +
+        formatMegabytes(totalBytes) +
+        " · " +
+        hashLabel;
+      const fileNames = entries.map(function (entry) {
+        return entry.file.name;
+      }).join(" · ");
+      const firstPage = firstPageTexts[0] || "No selectable text found on page 1.";
+
+      state.upload = {
+        files: entries.length,
+        pages: totalPages
+      };
+
+      els.fileMeta.textContent = summary;
+      els.fileName.textContent = fileNames;
+      els.fileLine.hidden = false;
+      els.pdfChip.textContent = "PDF verified · local parse";
+      els.pdfPreviewText.textContent = firstPage.slice(0, 1200);
+      els.pdfPageTags.innerHTML = "";
+      pages.forEach(function (page) {
+        const tag = document.createElement("span");
+        tag.className = "pdf-page-tag";
+        tag.textContent = "p. " + page.page;
+        tag.title = page.file + " · page " + page.filePage;
+        els.pdfPageTags.appendChild(tag);
+      });
+      els.pdfPreview.open = false;
+      els.pdfState.hidden = false;
+      els.parseLine.hidden = true;
+      els.parseLine.textContent = "";
+      els.dropzone.removeAttribute("aria-busy");
+      state.parsing = false;
+
+      state.parseHold = window.setTimeout(function () {
+        if (token !== state.parseToken) return;
+        startStream(pdfLabel(entries.length) + " · " + pageLabel(totalPages), {
+          pages: totalPages,
+          files: entries.length,
+          real: true
+        });
+      }, 2400);
+    } catch (error) {
+      if (token !== state.parseToken) return;
+      state.parsing = false;
+      els.dropzone.removeAttribute("aria-busy");
+      els.parseLine.hidden = true;
+      els.parseLine.textContent = "";
+      els.fileInput.value = "";
+      toast("PDF parse failed", (error && error.message) || "The selected PDF could not be parsed.");
+    }
+  }
+
+  function handleFiles(files) {
+    if (!files || !files.length) {
+      toast("No PDF selected", "Choose one or more PDF files to parse locally.");
+      return;
+    }
+    if (state.parsing) {
+      toast("Parsing already in progress", "Wait for the current PDF parse to finish.");
+      return;
+    }
+    parsePdfFiles(Array.prototype.slice.call(files));
   }
 
   els.simulate.addEventListener("click", function () {
-    startStream("Claim #9941 · 4 PDFs · 312 pages");
+    if (state.parsing) {
+      toast("Parsing already in progress", "Wait for the current PDF parse to finish.");
+      return;
+    }
+    startStream("Claim #9941 · 4 PDFs · 312 pages", demoStats());
   });
 
   els.skipWorkbench.addEventListener("click", skipToWorkbench);
@@ -1050,7 +1261,9 @@ Both Section D defects gate the same $250,000 Tranche 2.</pre>
   });
 
   els.fileInput.addEventListener("change", function () {
-    handleFile(els.fileInput.files && els.fileInput.files[0]);
+    const files = Array.prototype.slice.call(els.fileInput.files || []);
+    els.fileInput.value = "";
+    handleFiles(files);
   });
 
   ["dragenter", "dragover"].forEach(function (name) {
@@ -1069,17 +1282,21 @@ Both Section D defects gate the same $250,000 Tranche 2.</pre>
   els.dropzone.addEventListener("drop", function (event) {
     event.preventDefault();
     els.dropzone.classList.remove("is-over");
-    const file = event.dataTransfer && event.dataTransfer.files && event.dataTransfer.files[0];
-    if (file) {
-      handleFile(file);
-    } else {
-      startStream("Claim #9941 · 4 PDFs · 312 pages");
-    }
+    const files = event.dataTransfer && event.dataTransfer.files
+      ? Array.prototype.slice.call(event.dataTransfer.files)
+      : [];
+    handleFiles(files);
   });
 
   els.rerun.addEventListener("click", function () {
-    startStream("Claim #9941 · 4 PDFs · 312 pages");
-    logAction("Agent stream re-run", "Claim #9941 packet");
+    const stats = uploadedStats();
+    if (stats) {
+      startStream(pdfLabel(stats.files) + " · " + pageLabel(stats.pages), stats);
+      logAction("Agent stream re-run", "Local PDF packet · " + pageLabel(stats.pages));
+    } else {
+      startStream("Claim #9941 · 4 PDFs · 312 pages", demoStats());
+      logAction("Agent stream re-run", "Claim #9941 packet");
+    }
   });
 
   function showIntake() {
@@ -1124,15 +1341,13 @@ Both Section D defects gate the same $250,000 Tranche 2.</pre>
     state.pushedStageCode = null;
     state.pushedApproved = null;
     state.pushCount = 0;
-    state.routedAt = null;
     state.rawOpen = false;
     els.rawPayload.hidden = true;
     els.rawToggle.setAttribute("aria-expanded", "false");
     els.auditList.innerHTML = '<li class="audit-empty">No actions recorded yet.</li>';
     const announce = document.getElementById("cureAnnounce");
     if (announce) announce.textContent = "";
-    els.fileLine.hidden = true;
-    els.fileInput.value = "";
+    resetUploadState();
     if (els.outboundPack) {
       els.outboundPack.classList.remove("is-sent");
       els.packStamp.hidden = true;
@@ -1455,20 +1670,10 @@ Both Section D defects gate the same $250,000 Tranche 2.</pre>
     els.expandDiagram.addEventListener("click", function () {
       openMedia(
         "Architecture flow",
-        '<img class="media-diagram" src="assets/diagrams/claimcatch-flow.svg" alt="Expanded ClaimCatch architecture flow: TPA claim packet, Mistral OCR, Fireworks reasoning, MCP verification, zero-PHI sanitizer, and outbound systems.">'
+        '<object class="media-diagram" type="image/svg+xml" data="assets/diagrams/claimcatch-flow.svg" aria-label="Expanded ClaimCatch architecture: TPA claim packet, Mistral OCR, Fireworks AI, ground-truth verification, zero-PHI sanitizer, human analyst review and sign-off, and draft HubSpot, finance, and TPA outputs."><p class="media-diagram-fallback">Expand the architecture diagram in a browser that supports SVG objects.</p></object>'
       );
     });
   }
-
-  $$("[data-expand-chart]").forEach(function (button) {
-    button.addEventListener("click", function () {
-      const key = button.getAttribute("data-expand-chart");
-      const chart = document.getElementById(key === "domain" ? "benchDomainChart" : "benchCostChart");
-      if (!chart) return;
-      const title = key === "domain" ? "Domain Accuracy — expanded" : "Cost vs Intelligence Frontier — expanded";
-      openMedia(title, '<div class="media-chart">' + chart.innerHTML + "</div>");
-    });
-  });
 
   /* ------------------------------------------------------------------ */
   /* Ask Packet chat                                                     */
@@ -1682,19 +1887,19 @@ Both Section D defects gate the same $250,000 Tranche 2.</pre>
     const live = document.getElementById("cureAnnounce");
     if (live) {
       live.textContent = cured
-        ? "Signatures complete. Approved advance " + money(cs.approved) + ". Tranche 2 ready for disbursement."
-        : "Cure incomplete. Approved advance " + money(cs.approved) + ". Tranche 2 held.";
+        ? "Signatures complete. Draft advance " + money(cs.approved) + ". Tranche 2 ready for human sign-off."
+        : "Cure incomplete. Draft advance " + money(cs.approved) + ". Tranche 2 held.";
     }
 
     if (cured && !wasCured) {
       logAction(
-        "Signatures complete — Tranche 2 ready for disbursement",
-        "Approved advance " + money(cs.approved) + " · stage " + cs.stage
+        "Signatures complete — Tranche 2 ready for human sign-off",
+        "Draft advance " + money(cs.approved) + " · stage " + cs.stage
       );
     } else if (!cured && wasCured) {
       logAction(
         "Signatures reverted — Tranche 2 held",
-        "Approved advance " + money(cs.approved) + " · stage " + cs.stage
+        "Draft advance " + money(cs.approved) + " · stage " + cs.stage
       );
     }
 
@@ -1719,7 +1924,7 @@ Both Section D defects gate the same $250,000 Tranche 2.</pre>
         facts([
           ["Recipient", "Prairie States Administrators"],
           ["Request", "9941-A"],
-          ["Approved advance", money(cs.approved)]
+          ["Draft advance", money(cs.approved)]
         ]),
       primaryLabel: "Close"
     });
@@ -1753,13 +1958,13 @@ Both Section D defects gate the same $250,000 Tranche 2.</pre>
       body: cs.cured
         ? "<p>Both signatures are on file. Send the executed cure pack to Prairie State for records?</p>" +
           facts([
-            ["Approved advance", money(cs.approved)],
+            ["Draft advance", money(cs.approved)],
             ["Tranche 2 hold", money(cs.hold)],
             ["Signatures on file", cs.signatures + "/2"]
           ])
         : "<p>Request 9941-A will be sent for the Employer CFO signature and Meridian countersignature.</p>" +
           facts([
-            ["Approved advance", money(cs.approved)],
+            ["Draft advance", money(cs.approved)],
             ["Curable hold", money(cs.hold)],
             ["Signatures on file", cs.signatures + "/2"]
           ]),
@@ -1875,7 +2080,7 @@ Both Section D defects gate the same $250,000 Tranche 2.</pre>
         "<p><b>Already pushed " + state.pushedAt + " · " + state.pushedStageCode +
         " · no additional write.</b></p>" +
         facts([
-          ["Approved total", money(state.pushedApproved)],
+          ["Draft total", money(state.pushedApproved)],
           ["PHI scan", "PASS · 0 fields"]
         ]),
       primaryLabel: "Close"
@@ -1895,13 +2100,13 @@ Both Section D defects gate the same $250,000 Tranche 2.</pre>
 
     logAction(
       stage === "approved"
-        ? "Pushed approved record to HubSpot"
-        : "Pushed hold record to HubSpot",
-      "stage " + cs.stage + " · approved_total " + money(cs.approved) + " · zero PHI"
+        ? "Staged sign-off-ready record in HubSpot"
+        : "Staged hold record in HubSpot",
+      "stage " + cs.stage + " · draft advance " + money(cs.approved) + " · zero PHI"
     );
     toast(
-      "HubSpot record pushed",
-      (stage === "approved" ? "Approved" : "Hold stage") + " · " + money(cs.approved)
+      "HubSpot record staged",
+      (stage === "approved" ? "Sign-off-ready draft" : "Hold stage") + " · " + money(cs.approved)
     );
     updateUI(false);
   }
@@ -1924,7 +2129,7 @@ Both Section D defects gate the same $250,000 Tranche 2.</pre>
         body:
           "<p>Tranche 2 is still held. Push the hold-stage record now, or cure the two signatures first?</p>" +
           facts([
-            ["Approved total", money(cs.approved)],
+            ["Draft total", money(cs.approved)],
             ["Tranche 2 hold", money(cs.hold)],
             ["Employer CFO", "Missing"],
             ["Carrier countersignature", "Missing"]
@@ -1945,9 +2150,9 @@ Both Section D defects gate the same $250,000 Tranche 2.</pre>
 
     openDialog({
       kicker: "Confirm",
-      title: isUpdate ? "Push the updated cured record?" : "Approve and push the cured record?",
+      title: isUpdate ? "Push the updated sign-off-ready draft?" : "Approve and push the sign-off-ready draft?",
       body:
-        "<p>Approved advance <b>" + money(cs.approved) + "</b>. Both signatures are on file.</p>" +
+        "<p>Draft advance <b>" + money(cs.approved) + "</b>. Both signatures are on file; human sign-off is the next gate.</p>" +
         facts([
           ["Employer CFO", "Signed"],
           ["Carrier", "Countersigned"],
@@ -1964,60 +2169,6 @@ Both Section D defects gate the same $250,000 Tranche 2.</pre>
 
   els.push.addEventListener("click", requestPush);
 
-  /* ------------------------------------------------------------------ */
-  /* Growth route                                                        */
-  /* ------------------------------------------------------------------ */
-
-  function showRouteReceipt() {
-    openDialog({
-      kicker: "Receipt",
-      title: "Signal already routed",
-      body:
-        "<p><b>Already routed " + state.routedAt + " · no additional write.</b></p>" +
-        facts([
-          ["Broker", "Lockton / Prairie States TPA"],
-          ["Owner", "Patrick Feit"],
-          ["Exposure", "$500,000"],
-          ["Next", "Plan Protection / Captive conversation"]
-        ]),
-      primaryLabel: "Close"
-    });
-  }
-
-  function performRoute() {
-    if (state.routedAt) return;
-    state.routedAt = timeStamp();
-    logAction(
-      "Growth signal routed to Lockton",
-      "Laser shock · $500,000 exposure · owner Patrick Feit"
-    );
-    toast("Routed to Lockton", "Laser shock · $500,000 exposure · owner Patrick Feit");
-    updateUI(false);
-  }
-
-  function requestRoute() {
-    if (state.routedAt) {
-      showRouteReceipt();
-      return;
-    }
-    openDialog({
-      kicker: "Confirm",
-      title: "Route Laser shock to Lockton?",
-      body:
-        "<p>Route the $500,000 laser-shock exposure to Lockton / Prairie States TPA.</p>" +
-        facts([
-          ["Broker", "Lockton / Prairie States TPA"],
-          ["Pitch", "Aegle Plan Protection / Captive layer"],
-          ["Owner", "Patrick Feit"]
-        ]),
-      primaryLabel: "Route signal",
-      secondaryLabel: "Cancel",
-      onPrimary: performRoute
-    });
-  }
-
-  els.routeLockton.addEventListener("click", requestRoute);
-
   els.rawToggle.addEventListener("click", function () {
     state.rawOpen = !state.rawOpen;
     els.rawToggle.setAttribute("aria-expanded", String(state.rawOpen));
@@ -2026,7 +2177,7 @@ Both Section D defects gate the same $250,000 Tranche 2.</pre>
       els.rawCode.textContent = JSON.stringify(buildPayload(), null, 2);
     }
     logAction(
-      state.rawOpen ? "Raw MCP payload viewed" : "Raw MCP payload hidden",
+      state.rawOpen ? "Raw JSON payload viewed" : "Raw JSON payload hidden",
       "catastrophic_claim 9941"
     );
   });

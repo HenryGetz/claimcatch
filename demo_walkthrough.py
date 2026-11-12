@@ -129,7 +129,6 @@ def main() -> int:
           f"tranche1={payload['approved_tranche_1']:,.0f} "
           f"hold={payload['tranche_2_hold_amount']:,.0f} "
           f"requested={payload['requested_advance']:,.0f}")
-    print(f"  growth signal = {json.dumps(staged['growth_expansion_signal'])}")
     print(f"  phi_scan = {json.dumps(staged['phi_scan'])}")
 
     # ------------------------------------------------------------------

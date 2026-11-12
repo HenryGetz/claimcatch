@@ -1,93 +1,117 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 820" role="img" aria-label="ClaimCatch architecture: TPA claim packet through Mistral OCR, Fireworks AI and ground-truth MCP verification, zero-PHI sanitizer, and outbound HubSpot, growth, finance, and TPA cure systems."><desc>Edges: Page-Anchored .md, Strips clinical text, Claimant key + math, Laser shock, $1.70M wire, $250k hold.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-labelledby="ccTitle ccDesc">
+  <title id="ccTitle">ClaimCatch human-reviewed architecture</title>
+  <desc id="ccDesc">TPA claim packet through Mistral OCR and Fireworks AI, ground-truth verification against CMS, openFDA, CourtListener, and eCFR, a zero-PHI sanitizer, a human analyst review and sign-off gate, and draft HubSpot, finance, and TPA outputs.</desc>
   <defs>
     <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
       <path d="M0,0 L10,5 L0,10 Z" fill="#2B7A8B"/>
     </marker>
+    <style>
+      .node-title { font-family: Montserrat, Arial, sans-serif; font-weight: 600; fill: #F8F7F4; }
+      .node-detail { font-family: Montserrat, Arial, sans-serif; font-weight: 400; fill: #B9C6CF; }
+      .node-light-title { font-family: Montserrat, Arial, sans-serif; font-weight: 600; fill: #0F2537; }
+      .node-light-detail { font-family: Montserrat, Arial, sans-serif; font-weight: 400; fill: #4F5E68; }
+      .edge-label { font-family: Montserrat, Arial, sans-serif; font-weight: 500; fill: #0F2537; }
+      .source-text { font-family: Montserrat, Arial, sans-serif; font-weight: 500; fill: #0F2537; }
+      .source-link { cursor: pointer; }
+      .source-link rect { transition: stroke .15s ease, fill .15s ease; }
+      .source-link:hover rect, .source-link:focus rect { stroke: #0F2537; fill: #E6F1F5; }
+      .source-link:focus { outline: none; }
+    </style>
   </defs>
-  <rect x="0" y="0" width="1600" height="820" fill="#F8F7F4"/>
+  <rect x="0" y="0" width="1600" height="900" fill="#F8F7F4"/>
 
-  <!-- Nodes -->
+  <!-- Input / parse -->
   <g>
-    <rect x="20" y="120" width="230" height="130" rx="7" fill="#0F2537" stroke="#2B7A8B" stroke-width="2"/>
-    <text x="135" y="168" text-anchor="middle" fill="#F8F7F4" font-family="Montserrat, Arial, sans-serif" font-size="24" font-weight="600">TPA Claim Packet</text>
-    <text x="135" y="205" text-anchor="middle" fill="#B9C6CF" font-family="Montserrat, Arial, sans-serif" font-size="18">PDF · DOCX · UB-04</text>
+    <rect x="20" y="100" width="240" height="130" rx="7" fill="#0F2537" stroke="#2B7A8B" stroke-width="2"/>
+    <text class="node-title" x="140" y="146" text-anchor="middle" font-size="24">TPA Claim Packet</text>
+    <text class="node-detail" x="140" y="181" text-anchor="middle" font-size="18">PDF · DOCX · UB-04</text>
   </g>
-
   <g>
-    <rect x="450" y="120" width="250" height="130" rx="7" fill="#0F2537" stroke="#2B7A8B" stroke-width="2"/>
-    <text x="575" y="168" text-anchor="middle" fill="#F8F7F4" font-family="Montserrat, Arial, sans-serif" font-size="26" font-weight="600">Mistral OCR 4.1</text>
-    <text x="575" y="205" text-anchor="middle" fill="#B9C6CF" font-family="Montserrat, Arial, sans-serif" font-size="18">ZDR · /v1/ocr</text>
+    <rect x="340" y="100" width="250" height="130" rx="7" fill="#0F2537" stroke="#2B7A8B" stroke-width="2"/>
+    <text class="node-title" x="465" y="146" text-anchor="middle" font-size="26">Mistral OCR 4.1</text>
+    <text class="node-detail" x="465" y="181" text-anchor="middle" font-size="18">ZDR · /v1/ocr</text>
   </g>
-
   <g>
-    <rect x="830" y="95" width="300" height="190" rx="7" fill="#0F2537" stroke="#2B7A8B" stroke-width="2"/>
-    <text x="980" y="140" text-anchor="middle" fill="#F8F7F4" font-family="Montserrat, Arial, sans-serif" font-size="28" font-weight="600">Fireworks AI</text>
-    <text x="980" y="180" text-anchor="middle" fill="#B9C6CF" font-family="Montserrat, Arial, sans-serif" font-size="20">DeepSeek V4.1 Flash</text>
-    <text x="980" y="213" text-anchor="middle" fill="#B9C6CF" font-family="Montserrat, Arial, sans-serif" font-size="20">ZDR · BAA</text>
+    <rect x="670" y="75" width="300" height="180" rx="7" fill="#0F2537" stroke="#2B7A8B" stroke-width="2"/>
+    <text class="node-title" x="820" y="122" text-anchor="middle" font-size="28">Fireworks AI</text>
+    <text class="node-detail" x="820" y="160" text-anchor="middle" font-size="20">DeepSeek V4.1 Flash</text>
+    <text class="node-detail" x="820" y="193" text-anchor="middle" font-size="20">ZDR · BAA</text>
   </g>
 
+  <!-- Ground truth with clickable source nodes -->
   <g>
-    <rect x="1230" y="60" width="350" height="280" rx="7" fill="#0F2537" stroke="#2B7A8B" stroke-width="2"/>
-    <text x="1405" y="102" text-anchor="middle" fill="#F8F7F4" font-family="Montserrat, Arial, sans-serif" font-size="26" font-weight="600">Ground-Truth MCP</text>
-    <rect x="1255" y="125" width="300" height="38" rx="4" fill="#F8F7F4"/>
-    <text x="1405" y="150" text-anchor="middle" fill="#0F2537" font-family="Montserrat, Arial, sans-serif" font-size="18" font-weight="500">CMS NCD 110.24</text>
-    <rect x="1255" y="173" width="300" height="38" rx="4" fill="#F8F7F4"/>
-    <text x="1405" y="198" text-anchor="middle" fill="#0F2537" font-family="Montserrat, Arial, sans-serif" font-size="18" font-weight="500">openFDA</text>
-    <rect x="1255" y="221" width="300" height="38" rx="4" fill="#F8F7F4"/>
-    <text x="1405" y="246" text-anchor="middle" fill="#0F2537" font-family="Montserrat, Arial, sans-serif" font-size="18" font-weight="500">CourtListener ERISA</text>
-    <rect x="1255" y="269" width="300" height="38" rx="4" fill="#F8F7F4"/>
-    <text x="1405" y="294" text-anchor="middle" fill="#0F2537" font-family="Montserrat, Arial, sans-serif" font-size="18" font-weight="500">eCFR Title 29</text>
+    <rect x="1060" y="40" width="510" height="340" rx="7" fill="#0F2537" stroke="#2B7A8B" stroke-width="2"/>
+    <text class="node-title" x="1315" y="82" text-anchor="middle" font-size="26">Ground-Truth Verification</text>
+    <a class="source-link" href="https://www.cms.gov/medicare-coverage-database/view/ncd.aspx?ncdid=372" target="_blank" rel="noopener noreferrer" aria-label="CMS NCD 110.24 (opens in new tab)">
+      <rect x="1085" y="104" width="460" height="44" rx="4" fill="#F8F7F4" stroke="#2B7A8B" stroke-width="1"/>
+      <text class="source-text" x="1315" y="131" text-anchor="middle" font-size="18">CMS NCD 110.24 ↗</text>
+    </a>
+    <a class="source-link" href="https://open.fda.gov/" target="_blank" rel="noopener noreferrer" aria-label="openFDA (opens in new tab)">
+      <rect x="1085" y="160" width="460" height="44" rx="4" fill="#F8F7F4" stroke="#2B7A8B" stroke-width="1"/>
+      <text class="source-text" x="1315" y="187" text-anchor="middle" font-size="18">openFDA ↗</text>
+    </a>
+    <a class="source-link" href="https://www.courtlistener.com/" target="_blank" rel="noopener noreferrer" aria-label="CourtListener (opens in new tab)">
+      <rect x="1085" y="216" width="460" height="44" rx="4" fill="#F8F7F4" stroke="#2B7A8B" stroke-width="1"/>
+      <text class="source-text" x="1315" y="243" text-anchor="middle" font-size="18">CourtListener ERISA ↗</text>
+    </a>
+    <a class="source-link" href="https://www.ecfr.gov/current/title-29" target="_blank" rel="noopener noreferrer" aria-label="eCFR Title 29 (opens in new tab)">
+      <rect x="1085" y="272" width="460" height="44" rx="4" fill="#F8F7F4" stroke="#2B7A8B" stroke-width="1"/>
+      <text class="source-text" x="1315" y="299" text-anchor="middle" font-size="18">eCFR Title 29 ↗</text>
+    </a>
+    <text class="node-detail" x="1315" y="345" text-anchor="middle" font-size="16">Every conclusion carries an exact citation</text>
   </g>
 
+  <!-- Sanitizer + human gate -->
   <g>
-    <rect x="830" y="380" width="300" height="110" rx="7" fill="#0F2537" stroke="#2B7A8B" stroke-width="2"/>
-    <text x="980" y="422" text-anchor="middle" fill="#F8F7F4" font-family="Montserrat, Arial, sans-serif" font-size="26" font-weight="600">Zero-PHI Sanitizer</text>
-    <text x="980" y="452" text-anchor="middle" fill="#B9C6CF" font-family="Montserrat, Arial, sans-serif" font-size="18">Keeps key + math</text>
+    <rect x="320" y="370" width="300" height="110" rx="7" fill="#0F2537" stroke="#2B7A8B" stroke-width="2"/>
+    <text class="node-title" x="470" y="414" text-anchor="middle" font-size="26">Zero-PHI Sanitizer</text>
+    <text class="node-detail" x="470" y="446" text-anchor="middle" font-size="18">Keeps key + math</text>
+  </g>
+  <g>
+    <rect x="700" y="360" width="420" height="130" rx="7" fill="#F8F7F4" stroke="#2B7A8B" stroke-width="3"/>
+    <text class="node-light-title" x="910" y="404" text-anchor="middle" font-size="25">Human Analyst Review</text>
+    <text class="node-light-title" x="910" y="434" text-anchor="middle" font-size="25">&amp; Sign-Off</text>
+    <text class="node-light-detail" x="910" y="466" text-anchor="middle" font-size="16">Human gate before records or notices</text>
   </g>
 
+  <!-- Outputs -->
   <g>
-    <rect x="20" y="650" width="340" height="110" rx="7" fill="#0F2537" stroke="#2B7A8B" stroke-width="2"/>
-    <text x="190" y="695" text-anchor="middle" fill="#F8F7F4" font-family="Montserrat, Arial, sans-serif" font-size="26" font-weight="600">HubSpot Claim</text>
-    <text x="190" y="726" text-anchor="middle" fill="#B9C6CF" font-family="Montserrat, Arial, sans-serif" font-size="18">catastrophic_claim</text>
+    <rect x="40" y="680" width="360" height="130" rx="7" fill="#0F2537" stroke="#2B7A8B" stroke-width="2"/>
+    <text class="node-title" x="220" y="726" text-anchor="middle" font-size="24">HubSpot Claim</text>
+    <text class="node-detail" x="220" y="758" text-anchor="middle" font-size="16">catastrophic_claim — Claimant key + math</text>
   </g>
   <g>
-    <rect x="380" y="650" width="340" height="110" rx="7" fill="#0F2537" stroke="#2B7A8B" stroke-width="2"/>
-    <text x="550" y="695" text-anchor="middle" fill="#F8F7F4" font-family="Montserrat, Arial, sans-serif" font-size="26" font-weight="600">Growth Signal</text>
-    <text x="550" y="726" text-anchor="middle" fill="#B9C6CF" font-family="Montserrat, Arial, sans-serif" font-size="18">Lockton / TPA</text>
+    <rect x="460" y="680" width="420" height="130" rx="7" fill="#0F2537" stroke="#2B7A8B" stroke-width="2"/>
+    <text class="node-title" x="670" y="726" text-anchor="middle" font-size="23">Draft Finance Tranche 1 Memo</text>
+    <text class="node-detail" x="670" y="758" text-anchor="middle" font-size="16">$1.70M wire — Requires Human Sign-Off</text>
   </g>
   <g>
-    <rect x="740" y="650" width="340" height="110" rx="7" fill="#0F2537" stroke="#2B7A8B" stroke-width="2"/>
-    <text x="910" y="695" text-anchor="middle" fill="#F8F7F4" font-family="Montserrat, Arial, sans-serif" font-size="26" font-weight="600">Finance Tranche 1</text>
-    <text x="910" y="726" text-anchor="middle" fill="#B9C6CF" font-family="Montserrat, Arial, sans-serif" font-size="18">$1.70M wire</text>
-  </g>
-  <g>
-    <rect x="1100" y="650" width="340" height="110" rx="7" fill="#0F2537" stroke="#2B7A8B" stroke-width="2"/>
-    <text x="1270" y="695" text-anchor="middle" fill="#F8F7F4" font-family="Montserrat, Arial, sans-serif" font-size="26" font-weight="600">TPA Cure Notice</text>
-    <text x="1270" y="726" text-anchor="middle" fill="#B9C6CF" font-family="Montserrat, Arial, sans-serif" font-size="18">$250k hold</text>
+    <rect x="960" y="680" width="420" height="130" rx="7" fill="#0F2537" stroke="#2B7A8B" stroke-width="2"/>
+    <text class="node-title" x="1170" y="726" text-anchor="middle" font-size="24">Draft TPA Cure Notice</text>
+    <text class="node-detail" x="1170" y="758" text-anchor="middle" font-size="16">$250k hold — Pending Review</text>
   </g>
 
   <!-- Flow -->
   <g stroke="#2B7A8B" stroke-width="2" fill="none">
-    <line x1="250" y1="185" x2="450" y2="185" marker-end="url(#arrow)"/>
-    <line x1="700" y1="185" x2="810" y2="185" marker-end="url(#arrow)"/>
-    <line x1="1130" y1="195" x2="1230" y2="195" marker-end="url(#arrow)"/>
-    <line x1="1230" y1="205" x2="1130" y2="205" marker-end="url(#arrow)"/>
-    <line x1="980" y1="285" x2="980" y2="350" marker-end="url(#arrow)"/>
-    <path d="M980 490 L980 575 M190 575 L1270 575" />
-    <line x1="190" y1="575" x2="190" y2="620" marker-end="url(#arrow)"/>
-    <line x1="550" y1="575" x2="550" y2="620" marker-end="url(#arrow)"/>
-    <line x1="910" y1="575" x2="910" y2="620" marker-end="url(#arrow)"/>
-    <line x1="1270" y1="575" x2="1270" y2="620" marker-end="url(#arrow)"/>
+    <line x1="260" y1="165" x2="340" y2="165" marker-end="url(#arrow)"/>
+    <line x1="590" y1="165" x2="670" y2="165" marker-end="url(#arrow)"/>
+    <line x1="970" y1="145" x2="1060" y2="145" marker-end="url(#arrow)"/>
+    <line x1="1060" y1="185" x2="970" y2="185" marker-end="url(#arrow)"/>
+    <path d="M820 255 V310 H470 V370" marker-end="url(#arrow)"/>
+    <line x1="620" y1="425" x2="700" y2="425" marker-end="url(#arrow)"/>
+    <path d="M910 490 V610 H220 M670 610 H1170 M220 610 V680 M670 610 V680 M1170 610 V680"/>
+    <line x1="220" y1="610" x2="220" y2="680" marker-end="url(#arrow)"/>
+    <line x1="670" y1="610" x2="670" y2="680" marker-end="url(#arrow)"/>
+    <line x1="1170" y1="610" x2="1170" y2="680" marker-end="url(#arrow)"/>
   </g>
 
   <!-- Edge labels -->
-  <g fill="#0F2537" font-family="Montserrat, Arial, sans-serif" font-size="20" text-anchor="middle">
-    <text x="350" y="152" font-size="19">Page-Anchored</text>
-    <text x="350" y="174" font-size="19">.md</text>
-    <text x="1010" y="333" text-anchor="start">Strips clinical text</text>
-    <text x="190" y="637">Claimant key + math</text>
-    <text x="550" y="637">Laser shock</text>
-    <text x="910" y="637">$1.70M wire</text>
-    <text x="1270" y="637">$250k hold</text>
+  <g class="edge-label" text-anchor="middle">
+    <text x="300" y="156" font-size="18">Page .md</text>
+    <text x="630" y="156" font-size="16">Markdown</text>
+    <text x="1015" y="156" font-size="16">Citations</text>
+    <text x="645" y="300" font-size="20">Strips clinical text</text>
+    <text x="660" y="414" font-size="16" text-anchor="start">key + math</text>
+    <text x="910" y="645" font-size="20">Drafts only · requires human sign-off</text>
   </g>
 </svg>

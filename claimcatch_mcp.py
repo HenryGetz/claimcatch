@@ -1521,18 +1521,11 @@ def stage_zero_phi_hubspot_and_teams_handoff(
             "open_issue_root_cause": OPEN_ISSUE_ROOT_CAUSE,
             "mbr_status": "AT_RISK",
         }
-        growth_signal = {
-            "signal": "LASER_SHOCK",
-            "exposure": float(LASERED_DEDUCTIBLE - BASE_SPECIFIC_DEDUCTIBLE),
-            "pitch": "Aegle Plan Protection / Captive layer",
-            "broker_follow_up": True,
-        }
 
         payload_findings = _scan_payload(
             {
                 "payload": payload,
                 "partner_health": partner_health,
-                "growth_expansion_signal": growth_signal,
             }
         )
         if payload_findings:
@@ -1598,13 +1591,12 @@ def stage_zero_phi_hubspot_and_teams_handoff(
             "created_at": created_at,
             "approval": {
                 "required": True,
-                "role": "VP, Client Partnerships - Growth",
+                "role": "VP, Client Partnerships",
                 "owner_name": clean_owner,
                 "action": "single_click",
             },
             "payload": payload,
             "partner_health": partner_health,
-            "growth_expansion_signal": growth_signal,
             "phi_scan": phi_scan,
             "persistence": {
                 "table": "staged_payloads",
@@ -1635,7 +1627,7 @@ def _tpa_message(claim: str, tpa: str, owner: str) -> str:
     return f"""# TPA Message - Claim #{claim}
 
 **To:** {tpa} - Account Management
-**From:** Aegle Health Partners - Client Partnerships (Growth)
+**From:** Aegle Health Partners - Client Partnerships
 **Subject:** Claim #{claim}: Tranche 1 of $1,700,000 approved; $250,000 held pending a curable signature fix
 
 Dear Account Management Team,
@@ -1657,7 +1649,7 @@ Thank you for the advance request for claim #{claim} under policy {POLICY_NUMBER
 
 Regards,
 {owner}
-VP, Client Partnerships - Growth
+VP, Client Partnerships
 Aegle Health Partners (d/b/a Aegle Capital)
 """
 
@@ -1666,7 +1658,7 @@ def _finance_memo(claim: str, tpa: str, owner: str) -> str:
     return f"""# Finance Memo - Claim #{claim} Tranche Release
 
 **To:** Finance & Accounting
-**From:** Client Partnerships (Growth) - {owner}
+**From:** Client Partnerships - {owner}
 **Re:** Claim #{claim} - approved disbursement, signature hold, and prevented gap
 **Policy:** {POLICY_NUMBER} - {CARRIER} (TPA: {tpa})
 

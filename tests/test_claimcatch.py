@@ -308,7 +308,7 @@ def test_staging_envelope_is_dry_and_zero_phi():
     assert out["staged_payload_id"].startswith("stg_")
     assert out["idempotency_key"].startswith("idem_")
     assert out["approval"]["required"] is True
-    assert out["approval"]["role"] == "VP, Client Partnerships - Growth"
+    assert out["approval"]["role"] == "VP, Client Partnerships"
     assert out["approval"]["action"] == "single_click"
     assert out["network_writes"] == 0
 
@@ -344,9 +344,24 @@ def test_staging_envelope_is_dry_and_zero_phi():
     assert out["partner_health"]["open_issue_root_cause"] == (
         "Unflagged Renewal Laser + Missing CFO Counter-Sign"
     )
-    assert out["growth_expansion_signal"]["signal"] == "LASER_SHOCK"
-    assert out["growth_expansion_signal"]["exposure"] == 500_000
-    assert out["growth_expansion_signal"]["broker_follow_up"] is True
+    assert set(out) == {
+        "ok",
+        "dry",
+        "read_only",
+        "status",
+        "target",
+        "staged_payload_id",
+        "idempotency_key",
+        "created_at",
+        "approval",
+        "payload",
+        "partner_health",
+        "phi_scan",
+        "persistence",
+        "network_writes",
+        "audit_id",
+    }
+    assert not any("broker" in key.lower() for key in payload)
 
 
 def test_staging_persists_and_ids_are_unique(isolated_db):
@@ -407,7 +422,6 @@ def test_staged_sections_contain_no_phi_tokens():
         {
             "payload": out["payload"],
             "partner_health": out["partner_health"],
-            "growth_expansion_signal": out["growth_expansion_signal"],
         }
     )
     for token in ("C91", "D89", "D61", "D70", "N17", "J18", "MRN", "SSN", "DOB", "A.R."):

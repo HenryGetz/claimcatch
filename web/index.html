@@ -8,6 +8,7 @@
   <title>Claim #9941 · ClaimCatch</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='5' fill='%23192e58'/%3E%3Cpath d='M22.5 10.2a8 8 0 1 0 0 11.6' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M17 16.2l3 3 5.2-6.2' fill='none' stroke='%23368caa' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="styles.css">
+  <script src="vendor/pdfjs/pdf.min.js" defer></script>
   <script src="app.js" defer></script>
 </head>
 <body>
@@ -49,26 +50,45 @@
       <div class="wrap intake-wrap">
         <div class="intake-hero">
           <p class="eyebrow eyebrow-light">ClaimCatch · Partner &amp; Funding Operations</p>
-          <h1 id="intake-title">The claim packet, read in minutes. Funded with evidence.</h1>
-          <p class="lede">Upload a catastrophic claim packet. The agent parses every page, tests coverage against CMS rules and the executed policy, and returns a wire-safe advance with every dollar attributed.</p>
+          <h1 id="intake-title">High-speed claim triaging with humans in the loop.</h1>
+          <p class="lede">Upload a catastrophic claim packet. The agent parses every page, flags coverage and policy laser risks against CMS rules and the executed policy, and returns a draft wire-safe advance with every dollar attributed for human review.</p>
         </div>
 
         <div class="intake-grid">
           <div class="upload-panel">
             <h2 class="upload-title">Start with the packet</h2>
-            <p class="upload-sub">PDF or ZIP · de-identified documents only</p>
-            <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="Choose a claim packet PDF or ZIP, or drop it here">
+            <p class="upload-sub">PDF files · parsed locally</p>
+            <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="Choose one or more claim packet PDF files, or drop them here">
               <svg class="dz-icon" viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5"></path>
                 <path d="M4 15.5v3A1.5 1.5 0 0 0 5.5 20h13a1.5 1.5 0 0 0 1.5-1.5v-3"></path>
               </svg>
               <p class="dz-title">Drag &amp; drop your packet</p>
-              <p class="dz-sub">or <span class="dz-browse">browse files</span> · .pdf, .zip</p>
-              <input type="file" id="fileInput" accept=".pdf,.zip" class="visually-hidden">
+              <p class="dz-sub">or <span class="dz-browse">browse files</span> · PDF only · local parse</p>
+              <input type="file" id="fileInput" accept=".pdf,application/pdf" multiple class="visually-hidden">
             </div>
-            <p class="file-line" id="fileLine" hidden><span class="file-dot" aria-hidden="true"></span><span id="fileName"></span></p>
+            <p class="file-line" id="fileLine" hidden>
+              <span class="file-dot" aria-hidden="true"></span>
+              <span class="file-copy">
+                <span id="fileMeta"></span>
+                <span class="file-names" id="fileName"></span>
+              </span>
+            </p>
+            <p class="parse-line" id="parseLine" hidden role="status" aria-live="polite"></p>
+            <div class="pdf-state" id="pdfState" hidden>
+              <span class="pdf-chip" id="pdfChip">PDF verified · local parse</span>
+              <details class="pdf-preview" id="pdfPreview">
+                <summary>View extracted text</summary>
+                <div class="pdf-preview-body">
+                  <p class="pdf-preview-label">Page 1 · first 1,200 characters</p>
+                  <pre id="pdfPreviewText"></pre>
+                  <div class="pdf-page-tags" id="pdfPageTags" aria-label="Parsed page tags"></div>
+                  <p class="pdf-preview-note">Preview only. Extracted text stays in this browser session.</p>
+                </div>
+              </details>
+            </div>
             <button type="button" class="btn btn-primary btn-block" id="simulateBtn">Simulate Upload: Claim #9941 Packet <span class="btn-meta">4 PDFs · 312 Pages</span></button>
-            <p class="upload-note">Documents stay in this workspace. No PHI leaves this environment.</p>
+            <p class="upload-note">PDF bytes are parsed locally in your browser; adjudication figures remain the synthetic Claim #9941 demo.</p>
           </div>
 
           <aside class="intake-steps" aria-label="How the agent works">
@@ -129,7 +149,8 @@
           <div class="decision-top">
             <div>
               <p class="eyebrow eyebrow-light" id="heroStatusEyebrow">Claim #9941 · Adjudication hold — laser flagged</p>
-              <h1 id="decision-title">Safe to wire today: <span class="nowrap" id="heroAmount">$1,700,000</span></h1>
+              <p class="local-pdf-marker" id="workbenchUploadMarker" hidden><span class="local-pdf-dot" aria-hidden="true"></span><span id="workbenchUploadMeta"></span></p>
+              <h1 id="decision-title">Draft advance for sign-off: <span class="nowrap" id="heroAmount">$1,700,000</span></h1>
               <p class="decision-context">Prairie States Administrators <span aria-hidden="true">·</span> Midwest Precision Manufacturing LLC <span aria-hidden="true">·</span> Meridian Mutual Stop Loss <span aria-hidden="true">·</span> Policy MPM-SL-2026-0147</p>
             </div>
             <div class="decision-tools">
@@ -145,7 +166,7 @@
               <span class="figure-rule rule-neutral" aria-hidden="true"></span>
             </div>
             <div class="figure">
-              <dt>Safe to wire now</dt>
+              <dt>Draft for sign-off</dt>
               <dd id="heroApproved">$1,700,000</dd>
               <span class="figure-rule rule-ok" aria-hidden="true"></span>
             </div>
@@ -166,7 +187,7 @@
             <p class="timeline">
               <span>06 Oct <b>Intake</b></span>
               <span>07 Oct <b>Laser flagged</b></span>
-              <span>08 Oct <b>Tranche 1 approved</b></span>
+              <span>08 Oct <b>Tranche 1 prepared</b></span>
               <span class="timeline-pending" id="timelineCure">Cure pending</span>
             </p>
           </div>
@@ -179,19 +200,19 @@
           <header class="section-head">
             <p class="eyebrow">Findings</p>
             <h2 id="trapsTitle">Three findings explain the $1,100,000 gap.</h2>
-            <p class="section-desc" id="equation">Billed $3,050,000 − FL48 $350,000 = eligible $2,700,000; less L-1 $750,000 = $1,950,000 reimbursable; less hold $250,000 = $1,700,000 approved.</p>
+            <p class="section-desc" id="equation">Billed $3,050,000 − FL48 $350,000 = eligible $2,700,000; less L-1 $750,000 = $1,950,000 reimbursable; less hold $250,000 = $1,700,000 draft advance.</p>
           </header>
 
           <figure class="attribution">
-            <div class="stack-bar" role="img" id="stackBar" aria-label="Attribution of $3,050,000 billed: $1,700,000 approved, $250,000 signature hold, $500,000 laser gap, $350,000 FL48 excluded, $250,000 base deductible.">
-              <span class="seg seg-approved" id="segApproved" style="width:55.74%"><span id="segApprovedLabel">$1.70M approved</span></span>
+            <div class="stack-bar" role="img" id="stackBar" aria-label="Attribution of $3,050,000 billed: $1,700,000 draft, $250,000 signature hold, $500,000 laser gap, $350,000 FL48 excluded, $250,000 base deductible.">
+              <span class="seg seg-approved" id="segApproved" style="width:55.74%"><span id="segApprovedLabel">$1.70M draft</span></span>
               <span class="seg seg-hold" id="segHold" style="width:8.20%"><span class="seg-out" id="segHoldLabel">$250k</span></span>
               <span class="seg seg-laser" style="width:16.39%"><span>$500k laser</span></span>
               <span class="seg seg-fl48" style="width:11.48%"><span>$350k FL48</span></span>
               <span class="seg seg-base" style="width:8.20%"><span class="seg-out">$250k</span></span>
             </div>
             <figcaption class="legend">
-              <span><i class="dot dot-approved" aria-hidden="true"></i>Approved <b id="legendApproved">$1,700,000</b></span>
+              <span><i class="dot dot-approved" aria-hidden="true"></i>Draft <b id="legendApproved">$1,700,000</b></span>
               <span><i class="dot dot-hold" aria-hidden="true"></i>Signature hold <b id="legendHold">$250,000</b></span>
               <span><i class="dot dot-laser" aria-hidden="true"></i>Laser gap <b>$500,000</b></span>
               <span><i class="dot dot-fl48" aria-hidden="true"></i>FL48 excluded <b>$350,000</b></span>
@@ -265,7 +286,7 @@
                   <span class="trap-amount">$250,000</span>
                   <span class="trap-main">
                     <span class="trap-title">Missing CFO and carrier signatures</span>
-                    <span class="trap-sub" id="trap3Sub">Tranche 2 releases when both Section D defects cure</span>
+                    <span class="trap-sub" id="trap3Sub">Tranche 2 clears for human sign-off when both Section D defects cure</span>
                     <span class="trap-cite">Request 9941-A <span class="cite-court">§ D — certifications</span></span>
                   </span>
                   <span class="tag tag-cure" id="trap3Tag">Curable</span>
@@ -280,7 +301,7 @@
                 <div class="trap-detail-inner">
                   <div class="trap-copy">
                     <p>Section D of request 9941-A carries the TPA signature (<i>/s/ Dana Whitfield, 6 Oct 2026</i>), but the Employer CFO line is blank and Meridian's countersignature is absent. Both defects gate the same $250,000 Tranche 2; each cures on a valid signature, not on adjudication.</p>
-                    <p class="cite-block"><b>Cure path.</b> Signed CFO authorization plus Meridian subrogation countersignature releases Tranche 2 at $1,950,000 approved.</p>
+                    <p class="cite-block"><b>Cure path.</b> Signed CFO authorization plus Meridian subrogation countersignature clears Tranche 2 for human sign-off at a $1,950,000 draft advance.</p>
                   </div>
                   <button type="button" class="source-link" data-doc="tpa">View source <span aria-hidden="true">→</span></button>
                 </div>
@@ -295,8 +316,8 @@
         <div class="wrap">
           <header class="section-head">
             <p class="eyebrow">Resolution</p>
-            <h2 id="resolution-title">Resolve the hold. Move the money.</h2>
-            <p class="section-desc" id="resolutionDesc">Two signatures release Tranche 2. The partner record stages only claimant key, contract, and financial fields — zero PHI.</p>
+            <h2 id="resolution-title">Resolve the hold. Prepare the sign-off.</h2>
+            <p class="section-desc" id="resolutionDesc">Two signatures clear Tranche 2 for human sign-off. The partner record stages only claimant key, contract, and financial fields — zero PHI.</p>
           </header>
 
           <div class="split">
@@ -325,7 +346,7 @@
 
               <dl class="resolution-figures">
                 <div>
-                  <dt>Approved Advance</dt>
+                  <dt>Draft Advance</dt>
                   <dd id="approvedOut">$1,700,000</dd>
                 </div>
                 <div>
@@ -361,18 +382,18 @@
               <div class="outbound-panel-body" id="packTpa" role="tabpanel" aria-labelledby="packTabTpa" tabindex="0">
                 <dl class="email-meta">
                   <div><dt>To</dt><dd>Dana Whitfield — Prairie States Administrators</dd></div>
-                  <div><dt>Subject</dt><dd>Claim 9941 — Tranche 1 approved ($1,700,000); Tranche 2 cure required ($250,000)</dd></div>
+                  <div><dt>Subject</dt><dd>Claim 9941 — Draft Tranche 1 advance ($1,700,000); Tranche 2 cure required ($250,000)</dd></div>
                 </dl>
                 <div class="email-body">
                   <p>Reconciliation for Claim 9941 is complete.</p>
-                  <p>Tranche 1 of $1,700,000 is approved for Finance/Accounting disbursement.</p>
-                  <p>Two items remain before Tranche 2 of $250,000 can release:</p>
+                  <p>Tranche 1 of $1,700,000 is prepared for Finance/Accounting review and human sign-off.</p>
+                  <p>Two items remain before Tranche 2 of $250,000 can be prepared for sign-off:</p>
                   <ul>
                     <li>Employer CFO signature — blank on Section D.</li>
                     <li>Meridian Mutual Stop Loss countersignature — missing from the submitted packet.</li>
                   </ul>
-                  <p>Please return the executed request 9941-A by 17 October 2026. Tranche 2 releases within one business day of receipt.</p>
-                  <p>Separately, Endorsement L-1 imposes a $750,000 separate specific deductible against a $250,000 Schedule A base. The $500,000 difference is non-curable and excluded from the approved advance.</p>
+                  <p>Please return the executed request 9941-A by 17 October 2026. Tranche 2 can be prepared for sign-off within one business day of receipt.</p>
+                  <p>Separately, Endorsement L-1 imposes a $750,000 separate specific deductible against a $250,000 Schedule A base. The $500,000 difference is non-curable and excluded from the draft advance.</p>
                   <p>No clinical detail is included in this notice.</p>
                   <p class="email-sign">Patrick Feit<br>VP, Client Partnerships<br>Aegle Capital</p>
                 </div>
@@ -384,7 +405,7 @@
                   <div><dt>Subject</dt><dd>Claim 9941 — Tranche 1 memo and $1,100,000 gap</dd></div>
                 </dl>
                 <div class="email-body">
-                  <p>Tranche 1 of $1,700,000 is approved for disbursement. Tranche 2 of $250,000 is held pending the Employer CFO and Meridian countersignatures.</p>
+                  <p>Tranche 1 of $1,700,000 is prepared for disbursement subject to human sign-off. Tranche 2 of $250,000 is held pending the Employer CFO and Meridian countersignatures.</p>
                   <p>The $1,100,000 gap against the $2,800,000 request is fully attributed: $500,000 laser (L-1 $750,000 vs $250,000 base), $350,000 FL48, and $250,000 signature hold.</p>
                   <p>Double approval is recorded. No PHI is included in this memo.</p>
                   <p class="email-sign">Patrick Feit<br>VP, Client Partnerships<br>Aegle Capital</p>
@@ -399,7 +420,7 @@
                 <div class="email-body">
                   <p>Owner: Patrick Feit. Due before 1 Dec 2026.</p>
                   <p>Run the endorsement-after-Schedule-A sweep across every 1/1 renewal packet, then audit for the 3-signature set: TPA, Employer CFO, and carrier countersignature.</p>
-                  <p>Flag any L-1 separate deductible that changes the base Schedule A math for Finance before Tranche 1 release.</p>
+                  <p>Flag any L-1 separate deductible that changes the base Schedule A math for Finance before Tranche 1 sign-off.</p>
                   <p>No PHI in the playbook; use claimant_key and contract numbers only.</p>
                 </div>
               </div>
@@ -427,23 +448,9 @@
                 <div><dt>Partner health</dt><dd><span class="health-flag" id="hsHealth">At risk</span></dd></div>
               </dl>
 
-              <div class="growth-signal">
-                <p class="growth-kicker">Growth expansion signal</p>
-                <p class="growth-value">Laser shock</p>
-                <p class="growth-exposure">Exposure <b>$500,000</b></p>
-                <dl class="growth-meta">
-                  <div><dt>Broker</dt><dd>Lockton / Prairie States TPA</dd></div>
-                  <div><dt>Pitch</dt><dd>Aegle Plan Protection / Captive layer</dd></div>
-                </dl>
-                <p class="growth-owner">Owner Patrick Feit <span aria-hidden="true">·</span> next: Plan Protection / Captive conversation</p>
-                <div class="growth-cta">
-                  <button type="button" class="btn btn-white btn-small" id="routeLockton">Route to Lockton</button>
-                </div>
-              </div>
-
               <div class="hs-actions">
                 <button type="button" class="btn btn-primary" id="pushHubspot">Approve &amp; Push to HubSpot</button>
-                <button type="button" class="raw-toggle" id="rawToggle" aria-expanded="false" aria-controls="rawPayload">View Raw MCP JSON Payload <span aria-hidden="true">+</span></button>
+                <button type="button" class="raw-toggle" id="rawToggle" aria-expanded="false" aria-controls="rawPayload">View Raw JSON Payload <span aria-hidden="true">+</span></button>
               </div>
               <pre class="raw-payload" id="rawPayload" hidden><code id="rawCode"></code></pre>
             </div>
@@ -469,7 +476,7 @@
                 <div><dt>Next MBR</dt><dd>17 Oct 2026 · cure review</dd></div>
                 <div><dt>Requested advance</dt><dd>$2,800,000</dd></div>
                 <div><dt>Billed charges</dt><dd>$3,050,000</dd></div>
-                <div><dt>Approved advance</dt><dd>$1,700,000</dd></div>
+                <div><dt>Draft advance</dt><dd>$1,700,000</dd></div>
                 <div><dt>Policy</dt><dd>MPM-SL-2026-0147</dd></div>
               </dl>
             </div>
@@ -492,22 +499,19 @@
         <div class="wrap">
           <p class="eyebrow eyebrow-light">CLAIMCATCH · PHASE 1 AGENTIC ARCHITECTURE</p>
           <h1>Built for 24-hour funding speed. Engineered for zero-PHI leakage.</h1>
-          <p class="hiw-lede">How ClaimCatch converts 300-page unstructured TPA packets into reconciled, citation-backed funding decisions at $2.21 per 1,000 pages in reasoning cost.</p>
+          <p class="hiw-lede">How ClaimCatch turns 300-page unstructured TPA packets into citation-backed, human-reviewed funding decisions.</p>
           <dl class="hiw-metrics">
             <div class="hiw-metric">
-              <span class="hiw-metric-kicker">Reasoning only</span>
-              <dt>$2.21 <span>/ 1,000 Pages</span></dt>
-              <dd>Fireworks reasoning + MCP; $5.47–$6.21 all-in with Mistral OCR — no idle GPU clusters</dd>
+              <dt>Serverless Pay-Per-Token Inference</dt>
+              <dd>Zero idle GPU waste; pay only during active packet analysis.</dd>
             </div>
             <div class="hiw-metric">
-              <span class="hiw-metric-kicker" aria-hidden="true">&nbsp;</span>
-              <dt>12 Seconds</dt>
-              <dd>312-page packet parse + CMS NCD &amp; Policy Laser audit vs. 6–8 hours of manual review</dd>
+              <dt>Rapid Automated Triage</dt>
+              <dd>Compresses 6–8 hours of manual cross-referencing into minutes of citation-backed pre-audit for human reviewers.</dd>
             </div>
             <div class="hiw-metric">
-              <span class="hiw-metric-kicker" aria-hidden="true">&nbsp;</span>
               <dt>0 Bytes PHI Egress to CRM</dt>
-              <dd>Clinical data stays locked in-VPC; only de-identified tokens &amp; math sync to HubSpot</dd>
+              <dd>Clinical data stays inside the HIPAA boundary; only de-identified tokens and dollar math reach HubSpot.</dd>
             </div>
           </dl>
         </div>
@@ -528,8 +532,8 @@
                 <img src="assets/logos/mistralai.svg" alt="Mistral AI" width="26" height="26">
                 <span class="stage-logo-label">Mistral OCR 4.1</span>
               </div>
-              <h3>Stage 01 — Private-VPC Structural Parsing</h3>
-              <p>Raw PDFs, scanned UB-04 forms, and .docx policy binders route through stateless Mistral OCR 4.1 (/v1/ocr) via Aegle's private-VPC boundary, producing page-anchored Markdown with exact {page_no, bbox} coordinates.</p>
+              <h3>Stage 01 — Managed BAA + ZDR Structural Parsing</h3>
+              <p>Raw PDFs, scanned UB-04 forms, and .docx binders route through stateless, serverless OCR endpoints governed by an executed Enterprise HIPAA BAA and enforced Zero Data Retention (ZDR) — avoiding idle self-hosted GPU clusters.</p>
             </article>
 
             <article class="stage-card">
@@ -547,16 +551,14 @@
 
             <article class="stage-card">
               <div class="stage-top"><span class="stage-num">03</span><span class="stage-tag">Verify</span></div>
-              <div class="stage-logos">
-                <img src="assets/logos/fastmcp.svg" alt="FastMCP">
-                <img src="assets/logos/mcp.svg" alt="Model Context Protocol">
-              </div>
-              <h3>Stage 03 — Ground-Truth MCP Verification</h3>
-              <p>Deterministic Python FastMCP calls query CMS NCD 110.24, openFDA, CourtListener ERISA, and eCFR Title 29; UB-04 FL47/FL48 math is cross-footed to the dollar.</p>
+              <div class="stage-logos"><span class="stage-logo-label">Authoritative sources</span></div>
+              <h3>Stage 03 — Ground-Truth Verification</h3>
+              <p>Deterministic verification queries CMS NCD 110.24, openFDA, CourtListener ERISA, and eCFR Title 29; UB-04 FL47/FL48 math is cross-footed to the dollar.</p>
               <div class="stage-sources">
-                <img src="assets/logos/cmsgov.svg" alt="CMS.gov">
-                <img src="assets/logos/openfda.svg" alt="openFDA">
-                <img src="assets/logos/courtlistener.svg" alt="CourtListener">
+                <a class="stage-source-link" href="https://www.cms.gov/medicare-coverage-database/view/ncd.aspx?ncdid=372" target="_blank" rel="noopener noreferrer">CMS NCD 110.24 <span aria-hidden="true">↗</span></a>
+                <a class="stage-source-link" href="https://open.fda.gov/" target="_blank" rel="noopener noreferrer">openFDA <span aria-hidden="true">↗</span></a>
+                <a class="stage-source-link" href="https://www.courtlistener.com/" target="_blank" rel="noopener noreferrer">CourtListener <span aria-hidden="true">↗</span></a>
+                <a class="stage-source-link" href="https://www.ecfr.gov/current/title-29" target="_blank" rel="noopener noreferrer">eCFR Title 29 <span aria-hidden="true">↗</span></a>
               </div>
             </article>
 
@@ -567,7 +569,7 @@
                 <span class="stage-logo-label">HubSpot + Aegle Accel</span>
               </div>
               <h3>Stage 04 — Human-in-the-Loop CRM &amp; Partner Action</h3>
-              <p>Strips all PHI before staging <span class="mono">catastrophic_claim</span> in HubSpot, routes Laser Shock signals to Growth, and drafts TPA cure notices.</p>
+              <p>Applies the zero-PHI sanitizer, gates every output behind human review, stages the <span class="mono">catastrophic_claim</span> HubSpot record, and prepares the draft finance memo and TPA cure notice.</p>
             </article>
           </div>
         </div>
@@ -584,7 +586,9 @@
           <p class="diagram-hint">Swipe to explore the full architecture →</p>
           <figure class="diagram-frame">
             <div class="diagram-scroll" tabindex="0" role="region" aria-label="Scrollable architecture diagram">
-              <img src="assets/diagrams/claimcatch-flow-inline.svg" alt="ClaimCatch architecture: TPA claim packet through Mistral OCR, Fireworks AI and ground-truth MCP verification, zero-PHI sanitizer, and outbound HubSpot, growth, finance, and TPA cure systems." loading="eager">
+              <object class="diagram-object" type="image/svg+xml" data="assets/diagrams/claimcatch-flow-inline.svg" aria-label="ClaimCatch architecture: TPA claim packet through Mistral OCR and Fireworks AI, ground-truth verification, zero-PHI sanitizer, human analyst review and sign-off, and draft HubSpot, finance, and TPA outputs.">
+                <p class="diagram-fallback">ClaimCatch architecture diagram. <a href="https://www.cms.gov/medicare-coverage-database/view/ncd.aspx?ncdid=372" target="_blank" rel="noopener noreferrer">CMS NCD 110.24</a> · <a href="https://open.fda.gov/" target="_blank" rel="noopener noreferrer">openFDA</a> · <a href="https://www.courtlistener.com/" target="_blank" rel="noopener noreferrer">CourtListener</a> · <a href="https://www.ecfr.gov/current/title-29" target="_blank" rel="noopener noreferrer">eCFR Title 29</a></p>
+              </object>
             </div>
           </figure>
           <button type="button" class="expand-btn" id="expandDiagram">Open full D2 diagram</button>
@@ -595,37 +599,18 @@
         <div class="wrap">
           <header class="section-head">
             <p class="eyebrow">Benchmark</p>
-            <h2>Why Agentic Reasoning + MCP Beats Manual Review</h2>
+            <h2>Where legal reasoning meets cost.</h2>
           </header>
-          <div class="bench-grid">
-            <article class="bench-card">
-              <div class="bench-head">
-                <h3>Domain Accuracy</h3>
-                <span class="bench-tag" id="benchDomainTag">CLAIMCATCH 12-FIELD ADJUDICATION BENCHMARK</span>
-              </div>
-              <div class="bench-chart" id="benchDomainChart" role="img" aria-label="Domain accuracy: human legal and claims specialists at 82 percent versus frontier model plus ground-truth MCP at 94 percent."></div>
-              <button type="button" class="expand-btn" data-expand-chart="domain">Expand chart</button>
-              <p class="bench-callout">Time to decision <b>12 seconds</b> vs <b>6–8 hours</b></p>
-              <p class="bench-note" id="benchDomainNote"></p>
-            </article>
-            <article class="bench-card">
-              <div class="bench-head">
-                <h3>Cost vs Effective Adjudication Accuracy</h3>
-                <span class="bench-tag" id="benchCostTag">CLAIMCATCH 12-FIELD ADJUDICATION BENCHMARK</span>
-              </div>
-              <div class="bench-chart" id="benchCostChart" role="img" aria-label="Artificial Analysis cost per task versus Intelligence Index. DeepSeek V4.1 Flash 1017 is highlighted at index 33 and 60 cents per task."></div>
-              <button type="button" class="expand-btn" data-expand-chart="cost">Expand chart</button>
-              <ul class="bench-legend" id="benchLegend"></ul>
-              <p class="bench-callout" id="benchCostCallout"></p>
-            </article>
-          </div>
-          <div class="cost-strip">
-            <div class="cost-cell"><span>OCR 4.1</span><b>$4.00 / 1,000 pages</b></div>
-            <div class="cost-cell"><span>Reasoning</span><b>$1.47 base / $2.21 US-pinned per 1,000 pages</b></div>
-            <div class="cost-cell"><span>All-in</span><b>$5.47 base / $6.21 US-pinned per 1,000 pages</b></div>
-          </div>
-          <p class="cost-strip-note">Based on 312-page TPA claim packet (~2,100 input / 700 output tokens per page) via Mistral OCR 4.1 + Fireworks AI US-Resident ZDR.</p>
-          <p class="bench-source" id="benchSource"></p>
+          <article class="bench-card bench-wide">
+            <div class="bench-head">
+              <h3><a class="bench-link" href="https://artificialanalysis.ai/indexes/legal" target="_blank" rel="noopener noreferrer">Artificial Analysis Legal Index <span aria-hidden="true">↗</span></a></h3>
+              <span class="bench-tag">AA LEGAL INDEX · 12 NOV 2026</span>
+            </div>
+            <div class="bench-chart" id="benchLegalChart" role="img" aria-label="Scatter of AA Legal Index score versus AA legal cost per task (log scale): DeepSeek V4.1 Flash 38 at $0.19; Kimi K3.1 Pro 49 at $1.97; Gemini 4 Carbon 62 at $2.57; Claude Fable 5.2 63 at $15.67. Pareto line from DeepSeek through Kimi and Gemini to Claude."></div>
+            <ul class="bench-legend aa-legend" id="benchLegalLegend"></ul>
+            <p class="bench-callout" id="benchCallout">DeepSeek V4.1 Flash: ~195 legal-index points per $1. Claude Fable 5.2: 4.0 — 81× the cost for 25.6 more points. The cheapest per point is not the most capable: 38 vs 63.</p>
+            <p class="bench-source" id="benchSource">Source: Artificial Analysis Legal Index, accessed 12 Nov 2026. Cost per legal task is AA's benchmark spend, not Aegle's per-claim economics.</p>
+          </article>
         </div>
       </section>
 
@@ -633,7 +618,7 @@
         <div class="wrap">
           <header class="section-head">
             <p class="eyebrow">Trust boundary</p>
-            <h2>Clinical data stops at the VPC edge.</h2>
+            <h2>Clinical data stops at the HIPAA boundary</h2>
           </header>
           <div class="boundary-grid">
             <article class="boundary-card boundary-locked">
@@ -643,7 +628,7 @@
                 </span>
                 <span class="boundary-state">Locked</span>
               </div>
-              <h3>Locked Inside Aegle HIPAA VPC</h3>
+              <h3>Locked Inside Aegle HIPAA Boundary</h3>
               <ul>
                 <li>Raw PDFs</li>
                 <li>Patient names/DOBs</li>
@@ -663,9 +648,9 @@
               <ul>
                 <li>De-identified claimant_key (MPM-9941-07)</li>
                 <li>Contract policy numbers</li>
-                <li>Dollar tranche math ($1.70M Approved / $250k Held)</li>
+                <li>Dollar tranche math ($1.70M Draft / $250k Held)</li>
                 <li>Missing signature flags</li>
-                <li>Growth expansion alerts</li>
+                <li>Draft finance memo / TPA cure notice</li>
               </ul>
               <p class="boundary-note">100% compliant with Aegle's Protected-Data rules.</p>
             </article>
@@ -677,29 +662,28 @@
         <div class="wrap">
           <header class="section-head">
             <p class="eyebrow">Rollout</p>
-            <h2>From shadow mode to partner portal.</h2>
+            <h2>Three phases. One human-reviewed workflow.</h2>
           </header>
           <div class="rollout-grid">
             <article class="rollout-card">
               <span class="rollout-num">01</span>
-              <h3>Days 1–30 — Self-Hosted LibreChat + FastMCP (Shadow Mode)</h3>
-              <p>Deploy an internal, zero-PHI LibreChat workspace wired to Mistral OCR 4.1, Fireworks AI ZDR, and our Python FastMCP tools in 48 hours—giving Partner Associates immediate ad-hoc packet interrogation during 1/1 and 7/1 readiness checks before graduating to this dedicated Workbench UI.</p>
+              <h3>Phase 1 — Self-Hosted LibreChat + Legal Verification Tools (Immediate Deployment)</h3>
+              <p>Deploy an internal, zero-PHI LibreChat workspace wired to serverless OCR, Fireworks AI (ZDR + BAA), and our legal/clinical verification tools. Takes ~4 hours to set up and gives analysts an immediate chat interface where they can inspect the agent's exact chain of thought, live tool calls, and source citations during packet review.</p>
               <button type="button" class="expand-btn" data-open-chat>Try Ask Packet</button>
             </article>
             <article class="rollout-card">
               <span class="rollout-num">02</span>
-              <h3>Days 31–60 — Staged HubSpot Copilot</h3>
-              <p>Connect read-only FastMCP staging to HubSpot catastrophic_claim pipeline with 1-click Partner Associate sign-off.</p>
+              <h3>Phase 2 — Read-Only HubSpot CRM Integration</h3>
+              <p>Connect read-only CRM context from HubSpot into the agent workspace under Fireworks AI ZDR. No automated CRM write access; IT and ops retain control of production records.</p>
             </article>
             <article class="rollout-card">
               <span class="rollout-num">03</span>
-              <h3>Days 61–90 — Partner Portal &amp; Aura Intake</h3>
-              <p>Expose pre-flight packet readiness checks directly to top TPAs and brokers so incomplete packets never hit Aegle's desk.</p>
+              <h3>Phase 3 — Dedicated ClaimCatch Intake &amp; Triage Workbench</h3>
+              <p>Graduate into this dedicated workbench UI where analysts drop in full claim packets for automated multi-document triaging, interactive sidebar chat adjustments, and human-in-the-loop sign-off before staging records or drafting notices.</p>
             </article>
           </div>
         </div>
       </section>
-
 
       <section class="section hiw-section hiw-alt" id="faq">
         <div class="wrap">
@@ -710,7 +694,7 @@
           <div class="faq-grid">
             <article class="faq-card">
               <h3>How can an AI system legally touch HIPAA &amp; PHI data?</h3>
-              <p>ZDR + BAA cover Mistral OCR inline <span class="mono">/v1/ocr</span> (ZDR requested per call) and Fireworks <span class="mono">store:false</span>. A hard CRM boundary permits only de-identified keys and dollar math to leave the VPC.</p>
+              <p>Serverless Mistral OCR (<span class="mono">/v1/ocr</span>) and Fireworks AI operate under an executed Enterprise HIPAA BAA with enforced Zero Data Retention (ZDR). A hard CRM boundary permits only de-identified keys and dollar math to leave the HIPAA boundary.</p>
             </article>
             <article class="faq-card">
               <h3>How does it read messy 300-page hospital bills &amp; policies—and why Markdown?</h3>
@@ -718,11 +702,11 @@
             </article>
             <article class="faq-card">
               <h3>How does the AI actually know ERISA &amp; Stop-Loss Law without hallucinating?</h3>
-              <p>Top-percentile legal reasoning is paired with deterministic FastMCP calls to CourtListener, eCFR Title 29, CMS NCD 110.24, and openFDA. Every conclusion carries an exact citation.</p>
+              <p>Top-percentile legal reasoning AI models are paired with specialized legal and clinical verification tools connected directly to authoritative sources like <a href="https://www.courtlistener.com/" target="_blank" rel="noopener noreferrer">CourtListener</a>, <a href="https://www.ecfr.gov/current/title-29" target="_blank" rel="noopener noreferrer">eCFR Title 29</a>, <a href="https://www.cms.gov/medicare-coverage-database/view/ncd.aspx?ncdid=372" target="_blank" rel="noopener noreferrer">CMS NCD 110.24</a>, and <a href="https://open.fda.gov/" target="_blank" rel="noopener noreferrer">openFDA</a>. Every conclusion carries an exact citation.</p>
             </article>
             <article class="faq-card">
               <h3>Why pay per token on Fireworks AI instead of buying GPUs or hiring 10 more analysts?</h3>
-              <p>No idle H100 waste. Serverless inference costs roughly $6 per 1,000 pages, parses 312 pages in 12 seconds, and lands under $2 per claim.</p>
+              <p>If you rent or buy dedicated GPUs to self-host models, those GPUs sit idle 95% of the time while you pay for them around the clock. By using HIPAA-compliant serverless APIs on Fireworks AI, you only pay for compute at the exact moment an analyst is actively processing a claim packet—giving you access to much smarter frontier models at a fraction of the cost of dedicated hardware.</p>
             </article>
           </div>
           <p class="compliance-note">Production deployment operates under executed Enterprise HIPAA BAA + enforced Zero Data Retention (ZDR) across all inference and OCR endpoints.</p>
