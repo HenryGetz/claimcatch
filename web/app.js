@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Aegle Partner Ops — Claim #9941 workbench
+   ClaimCatch — Claim #9941 workbench
    No network calls, no external writes.
    ========================================================================== */
 "use strict";
@@ -27,7 +27,7 @@
   const BENCHMARK_DATA = {
     domainAccuracy: {
       title: "Domain Accuracy",
-      tag: "AEGLE 12-FIELD ADJUDICATION BENCHMARK",
+      tag: "CLAIMCATCH 12-FIELD ADJUDICATION BENCHMARK",
       note: "Evaluated across 12 stop-loss adjudication fields (Specific Deductible, Endorsement Lasers, UB-04 FL47/FL48 cross-footing, CMS NCD 110.24, and Section D signatures) with mandatory human sign-off.",
       items: [
         { label: "Frontier + MCP", value: 94, tone: "#2B7A8B" },
@@ -36,8 +36,8 @@
     },
     costIntelligence: {
       title: "Cost vs Effective Adjudication Accuracy",
-      tag: "AEGLE 12-FIELD ADJUDICATION BENCHMARK",
-      source: "Source: Aegle 12-field adjudication benchmark; cost per task from Artificial Analysis Intelligence Index v5.0.1, accessed 12 Nov 2026.",
+      tag: "CLAIMCATCH 12-FIELD ADJUDICATION BENCHMARK",
+      source: "Source: ClaimCatch 12-field adjudication benchmark; cost per task from Artificial Analysis Intelligence Index v5.0.1, accessed 12 Nov 2026.",
       callout: "94% Effective Domain Accuracy · $0.60/task · ~40x lower cost than unassisted proprietary frontier models",
       points: [
         { label: "Fireworks AI + FastMCP", cost: 0.60, score: 94, tone: "#2B7A8B", highlight: true },
@@ -1455,7 +1455,7 @@ Both Section D defects gate the same $250,000 Tranche 2.</pre>
     els.expandDiagram.addEventListener("click", function () {
       openMedia(
         "Architecture flow",
-        '<img class="media-diagram" src="assets/diagrams/aura-flow.svg" alt="Expanded Aura architecture flow: TPA claim packet, Mistral OCR, Fireworks reasoning, MCP verification, zero-PHI sanitizer, and outbound systems.">'
+        '<img class="media-diagram" src="assets/diagrams/claimcatch-flow.svg" alt="Expanded ClaimCatch architecture flow: TPA claim packet, Mistral OCR, Fireworks reasoning, MCP verification, zero-PHI sanitizer, and outbound systems.">'
       );
     });
   }

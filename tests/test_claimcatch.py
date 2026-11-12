@@ -1,6 +1,6 @@
-"""Offline pytest suite for the Aegle Partner Ops MCP server.
+"""Offline pytest suite for the ClaimCatch MCP server.
 
-No live network: AEGLE_OFFLINE=1 is forced and each test gets its own SQLite file.
+No live network: CLAIMCATCH_OFFLINE=1 is forced and each test gets its own SQLite file.
 """
 
 from __future__ import annotations
@@ -18,16 +18,16 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-os.environ.setdefault("AEGLE_OFFLINE", "1")
+os.environ.setdefault("CLAIMCATCH_OFFLINE", "1")
 
-import aegle_partner_ops_mcp as ops  # noqa: E402
+import claimcatch_mcp as ops  # noqa: E402
 
 
 @pytest.fixture(autouse=True)
 def isolated_db(tmp_path, monkeypatch):
-    db_path = tmp_path / "aegle_test.sqlite3"
-    monkeypatch.setenv("AEGLE_DB_PATH", str(db_path))
-    monkeypatch.setenv("AEGLE_OFFLINE", "1")
+    db_path = tmp_path / "claimcatch_test.sqlite3"
+    monkeypatch.setenv("CLAIMCATCH_DB_PATH", str(db_path))
+    monkeypatch.setenv("CLAIMCATCH_OFFLINE", "1")
     ops._INITIALIZED.discard(str(db_path.resolve()))
     ops._ensure_db()
     return db_path

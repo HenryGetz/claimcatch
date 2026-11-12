@@ -1,6 +1,8 @@
-# aegle-partner-ops-copilot
+# ClaimCatch
 
-Partner-side operations demo for Aegle Health Partners (d/b/a Aegle Capital): a six-tool MCP server plus a LibreChat system prompt that turn a local claim packet into a readiness check, an exact funding reconciliation, a zero-PHI CRM handoff, and a TPA resolution pack.
+ClaimCatch — partner-side stop-loss claim operations for Aegle Capital.
+
+A six-tool MCP server plus a LibreChat system prompt that turn a local claim packet into a readiness check, an exact funding reconciliation, a zero-PHI CRM handoff, and a TPA resolution pack.
 
 > **Synthetic data.** Claim `9941`, policy `MPM-SL-2026-0147`, and every figure in this repo are fabricated for demonstration. No real member, employer, TPA, carrier, or claim data is included. Nothing here is clinical, legal, or coverage advice.
 
@@ -21,27 +23,26 @@ Partner-side operations demo for Aegle Health Partners (d/b/a Aegle Capital): a 
 ## Repo layout
 
 ```
-aegle-partner-ops-copilot/
+claimcatch/
 ├── claim_packet_9941/                     # local OCR packet (4 files, synthetic)
 │   ├── 01_Meridian_StopLoss_Policy_MPM-SL-2026-0147.md
 │   ├── 02_Hospital_UB04_CMS1450_Claim_9941.md
 │   ├── 03_Clinical_UR_Case_Notes.md
 │   └── 04_TPA_Aegle_Accel_Funding_Request.md
-├── aegle_partner_ops_mcp.py               # FastMCP stdio server, 6 tools
-├── AEGLE_PARTNER_ASSOCIATE_PROMPT.md      # LibreChat system prompt
+├── claimcatch_mcp.py                      # FastMCP stdio server, 6 tools
+├── CLAIMCATCH_PARTNER_ASSOCIATE_PROMPT.md      # LibreChat system prompt
 ├── demo_walkthrough.py                    # end-to-end walkthrough against the tools
-├── tests/test_aegle_partner_ops.py        # tool-level tests, offline
+├── tests/test_claimcatch.py               # tool-level tests, offline
 ├── web/                                   # workbench UI (no network writes)
 │   ├── index.html
 │   ├── styles.css
 │   ├── app.js
 │   ├── diagrams/
-│   │   └── aura-flow.d2                   # D2 source: full architecture flow
+│   │   └── claimcatch-flow.d2             # D2 source: full architecture flow
 │   └── assets/
-│       ├── aegle-logo-white.png
 │       ├── diagrams/
-│       │   ├── aura-flow-inline.svg       # compiled multi-node inline diagram
-│       │   └── aura-flow.svg              # compiled full-size (modal)
+│       │   ├── claimcatch-flow-inline.svg # compiled multi-node inline diagram
+│       │   └── claimcatch-flow.svg        # compiled full-size (modal)
 │       ├── fonts/                         # Montserrat 400/500/600/700 (woff2)
 │       │   ├── montserrat-400.woff2
 │       │   ├── montserrat-500.woff2
@@ -70,20 +71,20 @@ python demo_walkthrough.py
 python -m http.server 3000 --bind 0.0.0.0 --directory web
 ```
 
-The test suite and demo run with `AEGLE_OFFLINE=1` semantics, so no network access is required. Run the tests to see their status in your environment; this README makes no claim about their result.
+The test suite and demo run with `CLAIMCATCH_OFFLINE=1` semantics, so no network access is required. Run the tests to see their status in your environment; this README makes no claim about their result.
 
 Then open `http://localhost:3000/` for the workbench. Any free port works. Binding `0.0.0.0` also makes the page reachable on a Tailscale or LAN IP when the host firewall allows it; use `127.0.0.1` if you only want loopback access.
 
 ### LibreChat setup
 
-1. Paste the full contents of `AEGLE_PARTNER_ASSOCIATE_PROMPT.md` as the agent's **system prompt**.
+1. Paste the full contents of `CLAIMCATCH_PARTNER_ASSOCIATE_PROMPT.md` as the agent's **system prompt**.
 2. Add the MCP server as a stdio MCP server:
 
    ```json
    {
-     "aegle_partner_ops": {
+     "claimcatch": {
        "command": "python",
-       "args": ["/path/to/aegle_partner_ops_mcp.py"]
+       "args": ["/path/to/claimcatch_mcp.py"]
      }
    }
    ```
@@ -129,7 +130,7 @@ The architecture page is the fifth nav destination: `INTAKE / WORKBENCH / EVIDEN
 | 03 Verify | FastMCP ground truth: CMS NCD 110.24, openFDA, CourtListener, eCFR | Deterministic coverage, label, case-law, and cross-foot checks. |
 | 04 Act | Zero-PHI sanitizer, then HubSpot `catastrophic_claim` and Aegle Accel | De-identified staging, growth signal, and drafted cure notices. |
 
-The full multi-node architecture is inline: `web/assets/diagrams/aura-flow-inline.svg` renders in a horizontally scrollable frame with a mobile pan hint, and its arrow labels stay readable at that size. The optional full-size view opens from **Open full D2 diagram** in a modal and uses the static `web/assets/diagrams/aura-flow.svg`, compiled from `web/diagrams/aura-flow.d2`. There is no runtime diagram service. The page also carries a locked-vs-cleared trust-boundary comparison, a 30/60/90 rollout, and a FAQ.
+The full multi-node architecture is inline: `web/assets/diagrams/claimcatch-flow-inline.svg` renders in a horizontally scrollable frame with a mobile pan hint, and its arrow labels stay readable at that size. The optional full-size view opens from **Open full D2 diagram** in a modal and uses the static `web/assets/diagrams/claimcatch-flow.svg`, compiled from `web/diagrams/claimcatch-flow.d2`. There is no runtime diagram service. The page also carries a locked-vs-cleared trust-boundary comparison, a 30/60/90 rollout, and a FAQ.
 
 **Ask Packet (Chat).** A topbar action opens a 440px slide-over (full-screen on mobile) that answers packet questions from three starter prompts, shows the MCP tool pill used for each answer, and links citations into the evidence drawer at Policy p. 3, Policy p. 7, UB-04, and the TPA request. Free-typed questions route by intent to the same answers. The bridge is read-only and zero-PHI.
 
@@ -152,16 +153,16 @@ BAA line: Production deployment operates under executed Enterprise HIPAA BAA + e
 
 | Variable | Default | Meaning |
 |---|---|---|
-| `AEGLE_DB_PATH` | `./.aegle/aegle_ops.sqlite3` | SQLite file for cache, audit log, and staging records. Created on first run. |
-| `AEGLE_OFFLINE` | unset | `1` disables the live CMS API and forces seed/local logic. The demo and tests use this. |
-| `AEGLE_CMS_API_BASE` | `https://api.coverage.cms.gov/v1` | Base URL for best-effort live NCD 110.24 metadata lookups. |
-| `AEGLE_HTTP_TIMEOUT` | `4` | Timeout in seconds for live CMS requests. |
+| `CLAIMCATCH_DB_PATH` | `./.claimcatch/claimcatch.sqlite3` | SQLite file for cache, audit log, and staging records. Created on first run. |
+| `CLAIMCATCH_OFFLINE` | unset | `1` disables the live CMS API and forces seed/local logic. The demo and tests use this. |
+| `CLAIMCATCH_CMS_API_BASE` | `https://api.coverage.cms.gov/v1` | Base URL for best-effort live NCD 110.24 metadata lookups. |
+| `CLAIMCATCH_HTTP_TIMEOUT` | `4` | Timeout in seconds for live CMS requests. |
 
 ---
 
 ## Tools
 
-All six tools are exposed by `aegle_partner_ops_mcp.py` over stdio.
+All six tools are exposed by `claimcatch_mcp.py` over stdio.
 
 | Tool | Signature | Purpose | Returns |
 |---|---|---|---|
@@ -231,7 +232,7 @@ flowchart LR
 
 | Element | Status |
 |---|---|
-| CMS NCD 110.24 coverage logic | Coverage mapping seeded locally. The optional live call is a best-effort NCD 110.24 metadata check only (when `AEGLE_OFFLINE` is not `1`); it does not return the full determination. |
+| CMS NCD 110.24 coverage logic | Coverage mapping seeded locally. The optional live call is a best-effort NCD 110.24 metadata check only (when `CLAIMCATCH_OFFLINE` is not `1`); it does not return the full determination. |
 | Mistral OCR 4.1 / Fireworks reasoning | Described architecture, not wired into this repo. The workbench neither calls nor requires either service; no API keys ship. |
 | Case law names | Real case names; reporter citations are not captured in this demo. |
 | HubSpot / Teams / email writes | Simulated. Staged payloads only; no outbound API calls. |
@@ -243,7 +244,7 @@ flowchart LR
 ## Limitations and next steps
 
 - No live HubSpot write path; a production version needs an approved, audited connector and a named approver role.
-- CMS lookups degrade to seed logic when the API is unavailable or `AEGLE_OFFLINE=1`; results are labeled accordingly and are not a coverage determination.
+- CMS lookups degrade to seed logic when the API is unavailable or `CLAIMCATCH_OFFLINE=1`; results are labeled accordingly and are not a coverage determination.
 - No PHI is processed by this demo; production keeps clinical data inside the Aegle VPC, and any future clinical workflow needs a separate, reviewed data-handling design.
 - Demo only — figures, entities, and outcomes are fabricated.
 - The $250,000 signature hold is a **simulated hold**, not an observed carrier action.
@@ -258,3 +259,7 @@ flowchart LR
 - No stdout logging from the MCP server; diagnostics go to stderr only, keeping the stdio protocol clean.
 - The packet directory is read locally; OCR text is never forwarded to an external channel.
 - PHI scanning runs before any payload is described as sendable, and a non-`PASS` result blocks it.
+
+---
+
+ClaimCatch · Aegle Capital

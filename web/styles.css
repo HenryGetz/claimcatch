@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Aegle Partner Ops — Claim #9941
+   ClaimCatch — Claim #9941
    Institutional fintech workbench. Local assets only.
    ========================================================================== */
 
@@ -209,13 +209,6 @@ a {
   font-weight: 700;
   letter-spacing: 0.2em;
   line-height: 1;
-}
-
-.brand-div {
-  width: 1px;
-  height: 18px;
-  background: rgba(255, 255, 255, 0.35);
-  margin: 0 2px;
 }
 
 .brand-sub {
@@ -2478,8 +2471,7 @@ a {
 
 @media (max-width: 820px) {
   .topbar-inner { gap: 18px; }
-  .brand-sub,
-  .brand-div { display: none; }
+  .brand-sub { display: none; }
   .figures { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 0; }
   .figure { padding: 20px 20px 20px 22px; }
   .figure:nth-child(2n + 1) { border-left: 0; padding-left: 0; }
@@ -4531,23 +4523,49 @@ a {
 /* ============================== ASK PACKET CHAT ============================== */
 
 .nav-chat {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
   flex-shrink: 0;
-  min-height: 38px;
-  padding: 0 12px;
+  width: 44px;
+  height: 44px;
+  min-height: 44px;
+  padding: 0;
   border: 1px solid rgba(255, 255, 255, 0.55);
   border-radius: 4px;
   background: transparent;
   color: var(--white);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
   cursor: pointer;
   transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.nav-chat::after {
+  content: attr(aria-label);
+  position: absolute;
+  top: calc(100% + 9px);
+  right: 0;
+  z-index: 80;
+  padding: 7px 9px;
+  border-radius: 4px;
+  background: var(--navy);
+  color: var(--white);
+  box-shadow: var(--shadow-soft);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(-3px);
+  pointer-events: none;
+  transition: opacity 0.16s ease, transform 0.16s ease;
+}
+
+.nav-chat:hover::after,
+.nav-chat:focus-visible::after {
+  opacity: 1;
+  transform: none;
 }
 
 .nav-chat:hover {
@@ -4555,11 +4573,6 @@ a {
   border-color: var(--white);
 }
 
-.nav-chat em {
-  font-style: normal;
-  color: rgba(255, 255, 255, 0.7);
-  font-weight: 500;
-}
 
 .chat-backdrop {
   position: fixed;
@@ -4874,25 +4887,7 @@ a {
   color: var(--faint);
 }
 
-@media (max-width: 1100px) {
-  .chat-label {
-    display: none;
-  }
-
-  .nav-chat {
-    width: 44px;
-    padding: 0;
-  }
-}
-
 @media (max-width: 720px) {
-  .nav-chat {
-    width: 30px;
-    height: 30px;
-    min-height: 30px;
-    padding: 0;
-    border-radius: 50%;
-  }
 
   .chat-drawer {
     width: 100vw;
@@ -4974,4 +4969,30 @@ a {
     min-width: 1100px;
     max-width: none;
   }
+}
+
+/* ClaimCatch wordmark */
+.brand-lockup {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  line-height: 1;
+}
+
+.brand-word {
+  font-size: 14.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.brand-sub {
+  font-size: 9.5px;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  display: block;
+}
+
+@media (max-width: 1100px) {
+  .brand-sub { display: none; }
 }

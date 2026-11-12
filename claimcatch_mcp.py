@@ -1,4 +1,4 @@
-"""Aegle Partner Ops MCP server.
+"""ClaimCatch MCP server.
 
 Production-shaped FastMCP demo for the Aegle Health Partners (d/b/a Aegle Capital)
 Client Partner Associate workflow.  Synthetic claim #9941 / policy MPM-SL-2026-0147.
@@ -27,13 +27,13 @@ from typing import Any, Iterator
 
 from mcp.server.fastmcp import FastMCP
 
-mcp = FastMCP("aegle-partner-ops")
+mcp = FastMCP("claimcatch")
 
 # ---------------------------------------------------------------------------
 # Logging (stderr only; server mode must never print to stdout)
 # ---------------------------------------------------------------------------
 
-logger = logging.getLogger("aegle_partner_ops")
+logger = logging.getLogger("claimcatch")
 if not logger.handlers:
     _handler = logging.StreamHandler(stream=sys.stderr)
     _handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)s %(name)s %(message)s"))
@@ -413,7 +413,7 @@ _INITIALIZED: set[str] = set()
 
 def _db_path() -> str:
     """Resolve the SQLite path from the environment on every call."""
-    return os.environ.get("AEGLE_DB_PATH", os.path.join(".aegle", "aegle_ops.sqlite3"))
+    return os.environ.get("CLAIMCATCH_DB_PATH", os.path.join(".claimcatch", "claimcatch.sqlite3"))
 
 
 def _now_iso() -> str:
@@ -425,7 +425,7 @@ def _new_audit_id() -> str:
 
 
 def _offline() -> bool:
-    value = os.environ.get("AEGLE_OFFLINE", "").strip().lower()
+    value = os.environ.get("CLAIMCATCH_OFFLINE", "").strip().lower()
     return value in {"1", "true", "yes", "on"}
 
 
@@ -999,7 +999,7 @@ def _cache_put(key: str, payload: dict[str, Any], ttl_seconds: int = 86400) -> N
 
 
 def _live_ncd_lookup(url: str) -> dict[str, Any]:
-    timeout_raw = os.environ.get("AEGLE_HTTP_TIMEOUT", "4")
+    timeout_raw = os.environ.get("CLAIMCATCH_HTTP_TIMEOUT", "4")
     try:
         timeout = float(timeout_raw)
     except (TypeError, ValueError):
@@ -1044,7 +1044,7 @@ def _live_ncd_lookup(url: str) -> dict[str, Any]:
 def check_cms_coverage_and_fda(hcpcs_code: str, diagnosis_icd10: str) -> dict:
     """Check CMS NCD 110.24 coverage and the FDA label for a HCPCS/revenue code plus ICD-10-CM diagnosis.
 
-    Attempts the live CMS Coverage API (short timeout) unless AEGLE_OFFLINE=1,
+    Attempts the live CMS Coverage API (short timeout) unless CLAIMCATCH_OFFLINE=1,
     caches successful responses for 24 hours, and otherwise falls back to a local
     seeded NCD record.  The response states exactly which source was used; it never
     claims live verification when the API was not reached.
@@ -1087,7 +1087,7 @@ def check_cms_coverage_and_fda(hcpcs_code: str, diagnosis_icd10: str) -> dict:
         ncd["determination"] = determination["determination"]
 
         base_url = os.environ.get(
-            "AEGLE_CMS_API_BASE", "https://api.coverage.cms.gov/v1"
+            "CLAIMCATCH_CMS_API_BASE", "https://api.coverage.cms.gov/v1"
         ).rstrip("/")
         live_url = f"{base_url}/reports/national-coverage-ncd/"
         cache_key = f"cms_ncd:{NCD_110_24['ncd_id']}:{code}:{diagnosis}"
@@ -1102,7 +1102,7 @@ def check_cms_coverage_and_fda(hcpcs_code: str, diagnosis_icd10: str) -> dict:
         if not determination["ok"]:
             live_error = None
         elif _offline():
-            live_error = "offline_mode (AEGLE_OFFLINE=1); no live CMS call attempted"
+            live_error = "offline_mode (CLAIMCATCH_OFFLINE=1); no live CMS call attempted"
         else:
             cached = _cache_get(cache_key)
             if cached is not None:

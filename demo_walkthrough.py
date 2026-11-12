@@ -1,8 +1,8 @@
-"""Deterministic offline walkthrough of all six Aegle Partner Ops MCP tools.
+"""Deterministic offline walkthrough of all six ClaimCatch MCP tools.
 
 Run with:  python demo_walkthrough.py
 
-Sets AEGLE_OFFLINE=1 before importing the server, so no CMS network call is made
+Sets CLAIMCATCH_OFFLINE=1 before importing the server, so no CMS network call is made
 and every coverage answer is honestly sourced from the local NCD seed.
 """
 
@@ -14,20 +14,20 @@ import sys
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent
-os.environ["AEGLE_OFFLINE"] = "1"
-DEMO_DB = os.environ.get("AEGLE_DB_PATH")
+os.environ["CLAIMCATCH_OFFLINE"] = "1"
+DEMO_DB = os.environ.get("CLAIMCATCH_DB_PATH")
 if not DEMO_DB:
-    DEMO_DB = str(REPO_ROOT / ".aegle" / "demo_walkthrough.sqlite3")
+    DEMO_DB = str(REPO_ROOT / ".claimcatch" / "demo_walkthrough.sqlite3")
     # Remove prior demo state so the walkthrough is deterministic run to run.
     for suffix in ("", "-wal", "-shm"):
         stale = Path(DEMO_DB + suffix)
         if stale.exists():
             stale.unlink()
-os.environ["AEGLE_DB_PATH"] = DEMO_DB
+os.environ["CLAIMCATCH_DB_PATH"] = DEMO_DB
 
 sys.path.insert(0, str(REPO_ROOT))
 
-import aegle_partner_ops_mcp as ops  # noqa: E402
+import claimcatch_mcp as ops  # noqa: E402
 
 
 def rule(title: str) -> None:
@@ -38,11 +38,11 @@ def rule(title: str) -> None:
 
 
 def main() -> int:
-    print("AEGLE PARTNER OPS - DEMO WALKTHROUGH")
+    print("CLAIMCATCH — DEMO WALKTHROUGH")
     print("Aegle Health Partners (d/b/a Aegle Capital)")
     print("Synthetic claim #9941 | Prairie States Administrators | Midwest Precision Manufacturing LLC")
     print(f"Policy {ops.POLICY_NUMBER} | {ops.CARRIER} | de-identified member {ops.CLAIMANT_KEY}")
-    print("Mode: OFFLINE (AEGLE_OFFLINE=1) - no live CMS call, no external writes")
+    print("Mode: OFFLINE (CLAIMCATCH_OFFLINE=1) - no live CMS call, no external writes")
 
     # ------------------------------------------------------------------
     rule("TOOL 1/6  lookup_medical_code")
@@ -150,7 +150,7 @@ def main() -> int:
     rule("DEMO COMPLETE")
     import sqlite3
 
-    with sqlite3.connect(os.environ["AEGLE_DB_PATH"]) as conn:
+    with sqlite3.connect(os.environ["CLAIMCATCH_DB_PATH"]) as conn:
         audit_rows = conn.execute("SELECT COUNT(*) FROM audit_log").fetchone()[0]
     print(f"  audit rows written: {audit_rows} (one per tool call, including failures)")
     print("  All six tools returned ok=true with audit ids; no PHI left the staged envelope.")
