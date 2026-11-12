@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 210 48" role="img" aria-label="Fireworks AI">
+  <g fill="none" stroke="#192e58" stroke-width="2.2" stroke-linecap="round">
+    <path d="M15 8v32M8 16l7-8 7 8M8 32l7 8 7-8"/>
+  </g>
+  <circle cx="15" cy="24" r="3.2" fill="#368caa"/>
+  <text x="34" y="31" font-family="Montserrat, Arial, sans-serif" font-size="19" font-weight="700" letter-spacing="0.3" fill="#192e58">Fireworks</text>
+  <text x="158" y="31" font-family="Montserrat, Arial, sans-serif" font-size="19" font-weight="500" letter-spacing="0.6" fill="#368caa">AI</text>
+</svg>

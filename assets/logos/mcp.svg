@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 40" role="img" aria-label="MCP">
+  <g fill="none" stroke="#192e58" stroke-width="2.4" stroke-linecap="round">
+    <path d="M20 10v20M20 10h16M20 30h16M36 10v20"/>
+  </g>
+  <circle cx="20" cy="10" r="3.2" fill="#368caa"/>
+  <circle cx="20" cy="30" r="3.2" fill="#368caa"/>
+  <circle cx="36" cy="10" r="3.2" fill="#192e58"/>
+  <circle cx="36" cy="30" r="3.2" fill="#192e58"/>
+  <text x="48" y="26" font-family="Montserrat, Arial, sans-serif" font-size="16" font-weight="700" letter-spacing="1.4" fill="#192e58">MCP</text>
+</svg>

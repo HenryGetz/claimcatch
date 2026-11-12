@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 40" role="img" aria-label="CourtListener">
+  <g stroke="#192e58" stroke-width="1.8" fill="none" stroke-linecap="round">
+    <path d="M14 8v24M7 32h14M9 14h10M14 14 8 23h12zM14 14l6 9H8"/>
+  </g>
+  <text x="27" y="27" font-family="Montserrat, Arial, sans-serif" font-size="15" font-weight="600" letter-spacing="0.1" fill="#192e58">CourtListener</text>
+</svg>
