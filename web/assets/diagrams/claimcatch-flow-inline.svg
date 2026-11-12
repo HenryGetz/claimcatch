@@ -16,6 +16,9 @@
       .source-link rect { transition: stroke .15s ease, fill .15s ease; }
       .source-link:hover rect, .source-link:focus rect { stroke: #0F2537; fill: #E6F1F5; }
       .source-link:focus { outline: none; }
+      .node-link { cursor: pointer; }
+      .node-link:hover .node-title, .node-link:focus .node-title { fill: #9FCFE0; }
+      .node-link:focus { outline: none; }
     </style>
   </defs>
   <rect x="0" y="0" width="1600" height="900" fill="#F8F7F4"/>
@@ -26,23 +29,27 @@
     <text class="node-title" x="140" y="146" text-anchor="middle" font-size="24">TPA Claim Packet</text>
     <text class="node-detail" x="140" y="181" text-anchor="middle" font-size="18">PDF · DOCX · UB-04</text>
   </g>
-  <g>
-    <rect x="340" y="100" width="250" height="130" rx="7" fill="#0F2537" stroke="#2B7A8B" stroke-width="2"/>
-    <text class="node-title" x="465" y="146" text-anchor="middle" font-size="26">Mistral OCR 4.1</text>
-    <text class="node-detail" x="465" y="181" text-anchor="middle" font-size="18">ZDR · /v1/ocr</text>
-  </g>
-  <g>
-    <rect x="670" y="75" width="300" height="180" rx="7" fill="#0F2537" stroke="#2B7A8B" stroke-width="2"/>
-    <text class="node-title" x="820" y="122" text-anchor="middle" font-size="28">Fireworks AI</text>
-    <text class="node-detail" x="820" y="160" text-anchor="middle" font-size="20">DeepSeek V4.1 Flash</text>
-    <text class="node-detail" x="820" y="193" text-anchor="middle" font-size="20">ZDR · BAA</text>
-  </g>
+  <a class="node-link" href="https://docs.mistral.ai/models/ocr-4-1" target="_blank" rel="noopener noreferrer" aria-label="Mistral OCR 4.1 model documentation (opens in a new tab)">
+    <g>
+      <rect x="340" y="100" width="250" height="130" rx="7" fill="#0F2537" stroke="#2B7A8B" stroke-width="2"/>
+      <text class="node-title" x="465" y="146" text-anchor="middle" font-size="26">Mistral OCR 4.1</text>
+      <text class="node-detail" x="465" y="181" text-anchor="middle" font-size="18">ZDR · /v1/ocr</text>
+    </g>
+  </a>
+  <a class="node-link" href="https://docs.fireworks.ai/serverless/us-only-serverless" target="_blank" rel="noopener noreferrer" aria-label="Fireworks US-only Serverless documentation (opens in a new tab)">
+    <g>
+      <rect x="670" y="75" width="300" height="180" rx="7" fill="#0F2537" stroke="#2B7A8B" stroke-width="2"/>
+      <text class="node-title" x="820" y="122" text-anchor="middle" font-size="28">Fireworks AI</text>
+      <text class="node-detail" x="820" y="160" text-anchor="middle" font-size="20">DeepSeek V4.1 Flash</text>
+      <text class="node-detail" x="820" y="193" text-anchor="middle" font-size="20">ZDR · BAA</text>
+    </g>
+  </a>
 
   <!-- Ground truth with clickable source nodes -->
   <g>
     <rect x="1060" y="40" width="510" height="340" rx="7" fill="#0F2537" stroke="#2B7A8B" stroke-width="2"/>
     <text class="node-title" x="1315" y="82" text-anchor="middle" font-size="26">Ground-Truth Verification</text>
-    <a class="source-link" href="https://www.cms.gov/medicare-coverage-database/view/ncd.aspx?ncdid=372" target="_blank" rel="noopener noreferrer" aria-label="CMS NCD 110.24 (opens in new tab)">
+    <a class="source-link" href="https://www.cms.gov/medicare-coverage-database/view/ncd.aspx?ncdid=374" target="_blank" rel="noopener noreferrer" aria-label="CMS NCD 110.24 (opens in new tab)">
       <rect x="1085" y="104" width="460" height="44" rx="4" fill="#F8F7F4" stroke="#2B7A8B" stroke-width="1"/>
       <text class="source-text" x="1315" y="131" text-anchor="middle" font-size="18">CMS NCD 110.24 ↗</text>
     </a>
@@ -50,9 +57,9 @@
       <rect x="1085" y="160" width="460" height="44" rx="4" fill="#F8F7F4" stroke="#2B7A8B" stroke-width="1"/>
       <text class="source-text" x="1315" y="187" text-anchor="middle" font-size="18">openFDA ↗</text>
     </a>
-    <a class="source-link" href="https://www.courtlistener.com/" target="_blank" rel="noopener noreferrer" aria-label="CourtListener (opens in new tab)">
+    <a class="source-link" href="https://www.courtlistener.com/help/" target="_blank" rel="noopener noreferrer" aria-label="CourtListener (opens in new tab)">
       <rect x="1085" y="216" width="460" height="44" rx="4" fill="#F8F7F4" stroke="#2B7A8B" stroke-width="1"/>
-      <text class="source-text" x="1315" y="243" text-anchor="middle" font-size="18">CourtListener ERISA ↗</text>
+      <text class="source-text" x="1315" y="243" text-anchor="middle" font-size="18">CourtListener ↗</text>
     </a>
     <a class="source-link" href="https://www.ecfr.gov/current/title-29" target="_blank" rel="noopener noreferrer" aria-label="eCFR Title 29 (opens in new tab)">
       <rect x="1085" y="272" width="460" height="44" rx="4" fill="#F8F7F4" stroke="#2B7A8B" stroke-width="1"/>
@@ -75,11 +82,13 @@
   </g>
 
   <!-- Outputs -->
-  <g>
-    <rect x="40" y="680" width="360" height="130" rx="7" fill="#0F2537" stroke="#2B7A8B" stroke-width="2"/>
-    <text class="node-title" x="220" y="726" text-anchor="middle" font-size="24">HubSpot Claim</text>
-    <text class="node-detail" x="220" y="758" text-anchor="middle" font-size="16">catastrophic_claim — Claimant key + math</text>
-  </g>
+  <a class="node-link" href="https://developers.hubspot.com/docs/guides/api/crm/objects/custom-objects" target="_blank" rel="noopener noreferrer" aria-label="HubSpot custom objects documentation (opens in a new tab)">
+    <g>
+      <rect x="40" y="680" width="360" height="130" rx="7" fill="#0F2537" stroke="#2B7A8B" stroke-width="2"/>
+      <text class="node-title" x="220" y="726" text-anchor="middle" font-size="24">HubSpot Claim</text>
+      <text class="node-detail" x="220" y="758" text-anchor="middle" font-size="16">catastrophic_claim — Claimant key + math</text>
+    </g>
+  </a>
   <g>
     <rect x="460" y="680" width="420" height="130" rx="7" fill="#0F2537" stroke="#2B7A8B" stroke-width="2"/>
     <text class="node-title" x="670" y="726" text-anchor="middle" font-size="23">Draft Finance Tranche 1 Memo</text>

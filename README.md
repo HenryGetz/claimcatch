@@ -137,7 +137,7 @@ HubSpot, Teams, and email writes are intentionally absent. Outbound artifacts ar
 |---|---|---|
 | 01 Parse | Mistral OCR 4.1 via managed, serverless `/v1/ocr` under an executed Enterprise HIPAA BAA and ZDR | Turns PDFs, scanned UB-04s, and policy binders into page-anchored Markdown with `{page_no, bbox}`. |
 | 02 Reason | Fireworks AI, US-resident `deepseek-v4p1-flash-1017-us`, `store:false` | Reasons over the parsed Markdown with zero prompt retention. |
-| 03 Verify | FastMCP tools against [CMS NCD 110.24](https://www.cms.gov/medicare-coverage-database/view/ncd.aspx?ncdid=372), [openFDA](https://open.fda.gov/), [CourtListener](https://www.courtlistener.com/), [eCFR Title 29](https://www.ecfr.gov/current/title-29) | Deterministic coverage, label, case-law, and UB-04 FL47/FL48 cross-foot checks. |
+| 03 Verify | FastMCP tools against [CMS NCD 110.24](https://www.cms.gov/medicare-coverage-database/view/ncd.aspx?ncdid=374), [openFDA](https://open.fda.gov/), [CourtListener](https://www.courtlistener.com/), [eCFR Title 29](https://www.ecfr.gov/current/title-29) | Deterministic coverage, label, case-law, and UB-04 FL47/FL48 cross-foot checks. |
 | 04 Act | Zero-PHI sanitizer plus human review gate | Stages a de-identified `catastrophic_claim` record and drafts the finance memo and TPA cure notice. Nothing is sent or written without sign-off. |
 
 ---
@@ -156,6 +156,26 @@ The How It Works page charts the [Artificial Analysis Legal Index](https://artif
 Callout: ~195 legal-index points per $1 for DeepSeek V4.1 Flash versus 4.0 for Claude Fable 5.2 — 81× the cost for 25.6 more points. The cheapest per point is not the most capable.
 
 No other cost, speed, or accuracy table is claimed.
+
+---
+
+## Verify the claims
+
+- Mistral OCR 4.1: https://docs.mistral.ai/models/ocr-4-1
+- Mistral zero data retention: https://docs.mistral.ai/admin/monitor-comply/zero-data-retention
+- Mistral Trust Center: https://trust.mistral.ai/
+- Fireworks US-only serverless: https://docs.fireworks.ai/serverless/us-only-serverless
+- Fireworks data handling / ZDR: https://docs.fireworks.ai/guides/security_compliance/data_handling
+- Fireworks serverless pricing: https://docs.fireworks.ai/serverless/pricing
+- HubSpot custom objects: https://developers.hubspot.com/docs/guides/api/crm/objects/custom-objects
+- CMS NCD 110.24: https://www.cms.gov/medicare-coverage-database/view/ncd.aspx?ncdid=374
+- openFDA: https://open.fda.gov/
+- CourtListener: https://www.courtlistener.com/help/
+- eCFR Title 29: https://www.ecfr.gov/current/title-29
+- Artificial Analysis Legal Index: https://artificialanalysis.ai/indexes/legal
+- PDF.js: https://mozilla.github.io/pdf.js/
+
+BAA terms are contractual; public vendor docs document ZDR and HIPAA support, not an executed BAA.
 
 ---
 
