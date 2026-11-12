@@ -53,17 +53,18 @@ input: TPA Claim Packet {
   class: node
   formats: PDF · DOCX · UB-04 { class: source }
 }
-ocr: Mistral OCR 4.1 (ZDR) { class: node }
+ocr: Mistral OCR 4.1 (ZDR) { class: node; link: "https://docs.mistral.ai/models/ocr-4-1" }
 reasoning: Fireworks AI {
   class: node
+  link: "https://docs.fireworks.ai/serverless/us-only-serverless"
   model: DeepSeek V4.1 Flash { class: source }
   zdr: ZDR · BAA { class: source }
 }
 verify: Ground-Truth Verification {
   class: node
-  cms: CMS NCD 110.24 { class: source; link: "https://www.cms.gov/medicare-coverage-database/view/ncd.aspx?ncdid=372" }
+  cms: CMS NCD 110.24 { class: source; link: "https://www.cms.gov/medicare-coverage-database/view/ncd.aspx?ncdid=374" }
   fda: openFDA { class: source; link: "https://open.fda.gov/" }
-  court: CourtListener ERISA { class: source; link: "https://www.courtlistener.com/" }
+  court: CourtListener { class: source; link: "https://www.courtlistener.com/help/" }
   ecfr: eCFR Title 29 { class: source; link: "https://www.ecfr.gov/current/title-29" }
 }
 sanitizer: Zero-PHI Sanitizer {
@@ -76,6 +77,7 @@ human: Human Analyst Review & Sign-Off {
 }
 hubspot: HubSpot Claim {
   class: output
+  link: "https://developers.hubspot.com/docs/guides/api/crm/objects/custom-objects"
   detail: "catastrophic_claim — Claimant key + math" { class: source }
 }
 finance: Draft Finance Tranche 1 Memo {
