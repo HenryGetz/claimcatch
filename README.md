@@ -138,7 +138,7 @@ The full multi-node architecture is inline: `web/assets/diagrams/aura-flow-inlin
 - **Chart 1 — Domain Accuracy**, tagged `AEGLE 12-FIELD ADJUDICATION BENCHMARK`: 94% Frontier+MCP versus 82% human specialist. Evaluated across 12 stop-loss adjudication fields (Specific Deductible, Endorsement Lasers, UB-04 FL47/FL48 cross-footing, CMS NCD 110.24, and Section D signatures) with mandatory human sign-off.
 - **Chart 2 — Cost vs Effective Adjudication Accuracy**: Fireworks AI + FastMCP sits top-left at 94% for $0.60 per task; unassisted models plot to the right at higher cost. Callout: `94% Effective Domain Accuracy · $0.60/task · ~40x lower cost than unassisted proprietary frontier models`. Cost per task comes from Artificial Analysis v5.0.1.
 
-Cost strip: OCR $4.00 per 1,000 pages + reasoning $1.47 base / $2.21 US-pinned = $5.47–$6.21 all-in per 1,000 pages. The range is pricing region, not uncertainty. Based on 312-page TPA claim packet (~2,100 input / 700 output tokens per page) via Mistral OCR 4.1 + Fireworks AI US-Resident ZDR.
+Cost strip: OCR $4.00 per 1,000 pages + reasoning $1.47 base / $2.21 US-pinned = $5.47–$6.21 all-in per 1,000 pages. Based on 312-page TPA claim packet (~2,100 input / 700 output tokens per page) via Mistral OCR 4.1 + Fireworks AI US-Resident ZDR.
 
 BAA line: Production deployment operates under executed Enterprise HIPAA BAA + enforced Zero Data Retention (ZDR) across all inference and OCR endpoints.
 
