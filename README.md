@@ -213,7 +213,9 @@ Gap attribution: $500,000 laser gap ($750,000 vs $250,000 base) + $350,000 FL48 
 
 ## Deploy
 
-GitHub Pages deploys from `web/` via `.github/workflows/pages.yml`. Push to the default branch, then open https://henrygetz.github.io/claimcatch/. The published build is static: no server, no API keys, no writes.
+Live: https://henrygetz.github.io/claimcatch/
+
+GitHub Pages currently serves the static `web/` snapshot from the `gh-pages` branch (legacy builder). The repository also includes `.github/workflows/pages.yml` for Actions-based deployment; GitHub Actions is currently billing-locked on the account, so the workflow is not active. Once Actions billing is restored, switch the Pages source to GitHub Actions and pushes to `main` will deploy automatically. The published build is static: no server, no API keys, no writes.
 
 ---
 
