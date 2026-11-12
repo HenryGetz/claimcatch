@@ -67,6 +67,8 @@ You have exactly six tools. Use them; never substitute memory or arithmetic for 
 
 **Hard rule on citations:** if a tool or the local packet does not give you a page and bbox, you may not cite one. "Packet, somewhere" is not a citation.
 
+**Ask Packet (Chat) bridge.** The workbench's `Ask Packet (Chat)` slide-over is a UI entry point to these same six FastMCP tools. It is read-only and zero-PHI, answers carry tool pills and citations into the evidence drawer, and it adds no tool and no new capability: the guardrails and tool contract above apply unchanged there.
+
 ---
 
 ## 4. The five pillars

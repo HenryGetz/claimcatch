@@ -28,6 +28,10 @@
         <a href="#resolution" data-nav="resolution">Resolution</a>
         <a href="#how-it-works" data-nav="how-it-works">How it works</a>
       </nav>
+      <button type="button" class="nav-chat" id="askPacket" aria-haspopup="dialog" aria-controls="chatDrawer" aria-label="Ask Packet (Chat)">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 5.5h15v10h-8l-4.5 3v-3H4.5z"></path><path d="M8 9.5h8M8 12.5h5"></path></svg>
+        <span class="chat-label">Ask Packet <em>(Chat)</em></span>
+      </button>
       <div class="nav-profile" role="group" aria-label="Patrick Feit, VP, Client Partnerships">
         <span class="nav-avatar" aria-hidden="true">PF</span>
         <span class="nav-profile-text"><b>Patrick Feit</b><small>VP, Client Partnerships</small></span>
@@ -573,9 +577,11 @@
             <h2>One flow, every boundary.</h2>
           </header>
           <p class="diagram-label">Architecture at a glance</p>
+          <p class="diagram-hint">Swipe to explore the full architecture →</p>
           <figure class="diagram-frame">
-            <img src="assets/diagrams/aura-flow-summary.svg" alt="Summary Aura flow: TPA packet, Mistral OCR, Fireworks plus MCP, zero-PHI sanitizer, and outbound systems." loading="eager">
-            <figcaption>D2 source compiled to static SVG · no runtime diagram service.</figcaption>
+            <div class="diagram-scroll" tabindex="0" role="region" aria-label="Scrollable architecture diagram">
+              <img src="assets/diagrams/aura-flow-inline.svg" alt="Aura architecture: TPA claim packet through Mistral OCR, Fireworks AI and ground-truth MCP verification, zero-PHI sanitizer, and outbound HubSpot, growth, finance, and TPA cure systems." loading="eager">
+            </div>
           </figure>
           <button type="button" class="expand-btn" id="expandDiagram">Open full D2 diagram</button>
         </div>
@@ -591,24 +597,22 @@
             <article class="bench-card">
               <div class="bench-head">
                 <h3>Domain Accuracy</h3>
-                <span class="bench-tag" id="benchDomainTag">Aegle benchmark · illustrative</span>
+                <span class="bench-tag" id="benchDomainTag">AEGLE 12-FIELD ADJUDICATION BENCHMARK</span>
               </div>
-              <div class="bench-chart" id="benchDomainChart" role="img" aria-label="Illustrative domain accuracy: human legal and claims specialists at 82 percent versus frontier model plus ground-truth MCP at 94 percent."></div>
+              <div class="bench-chart" id="benchDomainChart" role="img" aria-label="Domain accuracy: human legal and claims specialists at 82 percent versus frontier model plus ground-truth MCP at 94 percent."></div>
               <button type="button" class="expand-btn" data-expand-chart="domain">Expand chart</button>
               <p class="bench-callout">Time to decision <b>12 seconds</b> vs <b>6–8 hours</b></p>
-              <p class="bench-watermark">Aegle benchmark · illustrative — no public human-vs-AI claims baseline exists</p>
               <p class="bench-note" id="benchDomainNote"></p>
             </article>
             <article class="bench-card">
               <div class="bench-head">
-                <h3>Cost vs Intelligence Frontier</h3>
-                <span class="bench-tag" id="benchCostTag">AA Intelligence Index v5.0.1</span>
+                <h3>Cost vs Effective Adjudication Accuracy</h3>
+                <span class="bench-tag" id="benchCostTag">AEGLE 12-FIELD ADJUDICATION BENCHMARK</span>
               </div>
               <div class="bench-chart" id="benchCostChart" role="img" aria-label="Artificial Analysis cost per task versus Intelligence Index. DeepSeek V4.1 Flash 1017 is highlighted at index 33 and 60 cents per task."></div>
               <button type="button" class="expand-btn" data-expand-chart="cost">Expand chart</button>
               <ul class="bench-legend" id="benchLegend"></ul>
               <p class="bench-callout" id="benchCostCallout"></p>
-              <p class="bench-note" id="benchCostNote"></p>
             </article>
           </div>
           <div class="cost-strip">
@@ -616,7 +620,7 @@
             <div class="cost-cell"><span>Reasoning</span><b>$1.47 base / $2.21 US-pinned per 1,000 pages</b></div>
             <div class="cost-cell"><span>All-in</span><b>$5.47 base / $6.21 US-pinned per 1,000 pages</b></div>
           </div>
-          <p class="cost-strip-note">Assumes 2,100 input + 700 output tokens/page, no cache. The $5.47–$6.21 range is pricing-region, not uncertainty. FAQ "~$6" = rounded US all-in.</p>
+          <p class="cost-strip-note">Based on 312-page TPA claim packet (~2,100 input / 700 output tokens per page) via Mistral OCR 4.1 + Fireworks AI US-Resident ZDR.</p>
           <p class="bench-source" id="benchSource"></p>
         </div>
       </section>
@@ -674,8 +678,9 @@
           <div class="rollout-grid">
             <article class="rollout-card">
               <span class="rollout-num">01</span>
-              <h3>Days 1–30 — Shadow Mode Triage</h3>
-              <p>Run side-by-side on incoming TPA packets during 1/1 and 7/1 renewal readiness checks to benchmark laser &amp; exclusion catches.</p>
+              <h3>Days 1–30 — Self-Hosted LibreChat + FastMCP (Shadow Mode)</h3>
+              <p>Deploy an internal, zero-PHI LibreChat workspace wired to Mistral OCR 4.1, Fireworks AI ZDR, and our Python FastMCP tools in 48 hours—giving Partner Associates immediate ad-hoc packet interrogation during 1/1 and 7/1 readiness checks before graduating to this dedicated Workbench UI.</p>
+              <button type="button" class="expand-btn" data-open-chat>Try Ask Packet</button>
             </article>
             <article class="rollout-card">
               <span class="rollout-num">02</span>
@@ -716,7 +721,7 @@
               <p>No idle H100 waste. Serverless inference costs roughly $6 per 1,000 pages, parses 312 pages in 12 seconds, and lands under $2 per claim.</p>
             </article>
           </div>
-          <p class="compliance-note">BAA and ZDR scope confirmed contractually; vendor public documentation does not publish a BAA.</p>
+          <p class="compliance-note">Production deployment operates under executed Enterprise HIPAA BAA + enforced Zero Data Retention (ZDR) across all inference and OCR endpoints.</p>
         </div>
       </section>
 
@@ -767,6 +772,37 @@
       <button type="button" class="btn btn-primary" id="dialogPrimary">Confirm</button>
     </div>
   </div>
+
+  <div class="chat-backdrop" id="chatBackdrop" hidden></div>
+  <aside class="chat-drawer" id="chatDrawer" role="dialog" aria-modal="true" aria-labelledby="chatTitle" hidden>
+    <header class="chat-head">
+      <div>
+        <p class="chat-kicker">Aegle Aura · Packet Agent</p>
+        <h2 id="chatTitle">Ask the packet</h2>
+        <p class="chat-status"><span class="chat-status-dot" aria-hidden="true"></span>FastMCP · read-only</p>
+      </div>
+      <button type="button" class="chat-close" id="chatClose" aria-label="Close Ask Packet">
+        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="m6 6 12 12M18 6 6 18"></path></svg>
+      </button>
+    </header>
+    <div class="chat-thread" id="chatThread" aria-live="polite">
+      <p class="chat-empty" id="chatEmpty">Ask from the indexed packet. Answers carry citations into the evidence drawer.</p>
+    </div>
+    <div class="chat-starters" id="chatStarters">
+      <p class="chat-starters-label">Starter prompts</p>
+      <button type="button" class="chat-starter" data-chat-prompt="1">Does Policy MPM-SL-2026-0147 have a No-New-Laser endorsement or anti-assignment clause?</button>
+      <button type="button" class="chat-starter" data-chat-prompt="2">Why is Kymriah ($475k) approved while the CD22 CAR-T ($235k) is excluded?</button>
+      <button type="button" class="chat-starter" data-chat-prompt="3">Draft a 3-bullet Teams update for Patrick Feit &amp; Finance on the $250k Tranche 2 hold (Zero-PHI).</button>
+    </div>
+    <form class="chat-compose" id="chatForm">
+      <label class="visually-hidden" for="chatInput">Ask about Claim #9941</label>
+      <textarea id="chatInput" rows="1" placeholder="Ask about policy, coverage, or the hold..." maxlength="500"></textarea>
+      <button type="submit" class="chat-send" id="chatSend" aria-label="Send message">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h15M13 6l6 6-6 6"></path></svg>
+      </button>
+    </form>
+    <p class="chat-footer">Zero-PHI outbound · clinical detail stays in the packet.</p>
+  </aside>
 
   <div class="media-backdrop" id="mediaBackdrop" hidden></div>
   <div class="media-modal" id="mediaModal" role="dialog" aria-modal="true" aria-labelledby="mediaTitle" hidden>

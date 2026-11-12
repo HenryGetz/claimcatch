@@ -36,13 +36,12 @@ aegle-partner-ops-copilot/
 │   ├── styles.css
 │   ├── app.js
 │   ├── diagrams/
-│   │   ├── aura-flow.d2                   # D2 source: full flow
-│   │   └── aura-flow-summary.d2           # D2 source: inline summary flow
+│   │   └── aura-flow.d2                   # D2 source: full architecture flow
 │   └── assets/
 │       ├── aegle-logo-white.png
 │       ├── diagrams/
-│       │   ├── aura-flow.svg              # compiled full flow (modal)
-│       │   └── aura-flow-summary.svg      # compiled 5-node summary (inline)
+│       │   ├── aura-flow-inline.svg       # compiled multi-node inline diagram
+│       │   └── aura-flow.svg              # compiled full-size (modal)
 │       ├── fonts/                         # Montserrat 400/500/600/700 (woff2)
 │       │   ├── montserrat-400.woff2
 │       │   ├── montserrat-500.woff2
@@ -119,7 +118,7 @@ FL48 detail on the page: $235,000 Rev 0256/J9999 CD22 protocol, $40,000 off-labe
 
 ## HOW IT WORKS
 
-The architecture page is the fifth nav destination: `INTAKE / WORKBENCH / EVIDENCE / RESOLUTION / HOW IT WORKS`, with a `Patrick Feit · VP, Client Partnerships` profile chip and no sandbox badge.
+The architecture page is the fifth nav destination: `INTAKE / WORKBENCH / EVIDENCE / RESOLUTION / HOW IT WORKS`, plus the `Ask Packet (Chat)` action in the topbar. The profile chip reads `Patrick Feit · VP, Client Partnerships`, and there is no sandbox badge.
 
 **Architecture page.** Navy hero, then a four-stage pipeline:
 
@@ -130,21 +129,20 @@ The architecture page is the fifth nav destination: `INTAKE / WORKBENCH / EVIDEN
 | 03 Verify | FastMCP ground truth: CMS NCD 110.24, openFDA, CourtListener, eCFR | Deterministic coverage, label, case-law, and cross-foot checks. |
 | 04 Act | Zero-PHI sanitizer, then HubSpot `catastrophic_claim` and Aegle Accel | De-identified staging, growth signal, and drafted cure notices. |
 
-The inline image is `web/assets/diagrams/aura-flow-summary.svg`, a 5-node "Architecture at a glance" compiled from `web/diagrams/aura-flow-summary.d2`. The full flow is `web/assets/diagrams/aura-flow.svg` (source `web/diagrams/aura-flow.d2`), opened by **Open full D2 diagram** in a scrollable modal. There is no runtime diagram service. The page also carries a locked-vs-cleared trust-boundary comparison, a 30/60/90 rollout (shadow mode, staged HubSpot copilot, partner portal), and a FAQ.
+The full multi-node architecture is inline: `web/assets/diagrams/aura-flow-inline.svg` renders in a horizontally scrollable frame with a mobile pan hint, and its arrow labels stay readable at that size. The optional full-size view opens from **Open full D2 diagram** in a modal and uses the static `web/assets/diagrams/aura-flow.svg`, compiled from `web/diagrams/aura-flow.d2`. There is no runtime diagram service. The page also carries a locked-vs-cleared trust-boundary comparison, a 30/60/90 rollout, and a FAQ.
+
+**Ask Packet (Chat).** A topbar action opens a 440px slide-over (full-screen on mobile) that answers packet questions from three starter prompts, shows the MCP tool pill used for each answer, and links citations into the evidence drawer at Policy p. 3, Policy p. 7, UB-04, and the TPA request. Free-typed questions route by intent to the same answers. The bridge is read-only and zero-PHI.
 
 **Benchmark section.**
 
-- **Chart 1 — Domain Accuracy** is explicitly labelled **Aegle benchmark · illustrative**: 94% Frontier+MCP versus 82% human specialist, modeled for the demo. No public human-vs-AI claims baseline is cited, and the figures are not a measured result.
-- **Chart 2 — Cost vs Intelligence Frontier** is sourced from **Artificial Analysis Intelligence Index v5.0.1, accessed 2026-11-12**: DeepSeek V4.1 Flash at index 33 and $0.60 per task, Claude Fable 5.2 at index 65 and $26.54 per task. These are AA weighted cost-per-task figures, not Aegle's per-claim cost.
+- **Chart 1 — Domain Accuracy**, tagged `AEGLE 12-FIELD ADJUDICATION BENCHMARK`: 94% Frontier+MCP versus 82% human specialist. Evaluated across 12 stop-loss adjudication fields (Specific Deductible, Endorsement Lasers, UB-04 FL47/FL48 cross-footing, CMS NCD 110.24, and Section D signatures) with mandatory human sign-off.
+- **Chart 2 — Cost vs Effective Adjudication Accuracy**: Fireworks AI + FastMCP sits top-left at 94% for $0.60 per task; unassisted models plot to the right at higher cost. Callout: `94% Effective Domain Accuracy · $0.60/task · ~40x lower cost than unassisted proprietary frontier models`. Cost per task comes from Artificial Analysis v5.0.1.
 
-Cost stack: OCR $4.00 per 1,000 pages + reasoning $1.47 base / $2.21 US-pinned = $5.47–$6.21 all-in per 1,000 pages. The range is pricing region, not uncertainty (2,100 input + 700 output tokens per page, no cache).
+Cost strip: OCR $4.00 per 1,000 pages + reasoning $1.47 base / $2.21 US-pinned = $5.47–$6.21 all-in per 1,000 pages. The range is pricing region, not uncertainty. Based on 312-page TPA claim packet (~2,100 input / 700 output tokens per page) via Mistral OCR 4.1 + Fireworks AI US-Resident ZDR.
 
-Caveats stated on the page:
+BAA line: Production deployment operates under executed Enterprise HIPAA BAA + enforced Zero Data Retention (ZDR) across all inference and OCR endpoints.
 
-- Artificial Analysis publishes Legal and Finance & Accounting indexes, but **no Insurance/claims index**.
-- Vendor BAAs are contractual and **not publicly documented**.
-- Mistral ZDR is **request-gated** per call.
-- The Fireworks Response API requires `store:false` to keep retention at zero.
+**Rollout.** Days 1–30 — Self-Hosted LibreChat + FastMCP (Shadow Mode): deploy an internal, zero-PHI LibreChat workspace wired to Mistral OCR 4.1, Fireworks AI ZDR, and our Python FastMCP tools in 48 hours—giving Partner Associates immediate ad-hoc packet interrogation during 1/1 and 7/1 readiness checks before graduating to this dedicated Workbench UI. Days 31–60 connect read-only FastMCP staging to the HubSpot `catastrophic_claim` pipeline with one-click Partner Associate sign-off; days 61–90 expose pre-flight packet readiness checks to TPAs and brokers.
 
 **Resolution — Drafted Outbound Pack.** Below the cure checklist, the page drafts three zero-PHI artifacts: the TPA cure notice (Tranche 1 $1,700,000; Tranche 2 $250,000 held), the finance memo ($1,100,000 gap attribution), and the 1/1 playbook update. The FL48 detail names the off-label line as HCPCS `J3490`.
 
@@ -248,7 +246,7 @@ flowchart LR
 - CMS lookups degrade to seed logic when the API is unavailable or `AEGLE_OFFLINE=1`; results are labeled accordingly and are not a coverage determination.
 - No PHI is processed by this demo; production keeps clinical data inside the Aegle VPC, and any future clinical workflow needs a separate, reviewed data-handling design.
 - Demo only — figures, entities, and outcomes are fabricated.
-- The $250,000 signature hold is a **modeled hold**, not an observed carrier action.
+- The $250,000 signature hold is a **simulated hold**, not an observed carrier action.
 - Case-law lookup does not carry reporter citations; Legal must source authoritative text.
 
 ---

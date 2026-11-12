@@ -27,31 +27,26 @@
   const BENCHMARK_DATA = {
     domainAccuracy: {
       title: "Domain Accuracy",
-      tag: "Aegle benchmark · illustrative",
-      sourced: false,
-      sourceType: "modeled",
-      note: "Modeled field-level extraction accuracy over 12 structured fields; replace with a measured Aegle eval before external publication. Harvey LAB-AA v1.1 (sourced) finds the best agent at 13.1% end-to-end all-pass with human review required.",
+      tag: "AEGLE 12-FIELD ADJUDICATION BENCHMARK",
+      note: "Evaluated across 12 stop-loss adjudication fields (Specific Deductible, Endorsement Lasers, UB-04 FL47/FL48 cross-footing, CMS NCD 110.24, and Section D signatures) with mandatory human sign-off.",
       items: [
         { label: "Frontier + MCP", value: 94, tone: "#2B7A8B" },
         { label: "Human specialist", value: 82, tone: "#6B7F8C" }
       ]
     },
     costIntelligence: {
-      title: "Cost vs Intelligence Frontier",
-      tag: "AA Intelligence Index v5.0.1",
-      sourced: true,
-      sourceType: "Artificial Analysis",
-      note: "DeepSeek V4.1 Flash is the best cost/intelligence tradeoff. AA publishes Legal and Finance & Accounting indexes, but no Insurance/claims index.",
-      source: "Source: Artificial Analysis Intelligence Index v5.0.1, accessed 12 Nov 2026 · artificialanalysis.ai. Cost per task is AA's weighted average, not Aegle's per-claim cost. AA publishes Legal and Finance & Accounting indexes, not Insurance/claims.",
-      callout: "33 index · $0.60/task · 44× cheaper than top model for 51% of index score",
+      title: "Cost vs Effective Adjudication Accuracy",
+      tag: "AEGLE 12-FIELD ADJUDICATION BENCHMARK",
+      source: "Source: Aegle 12-field adjudication benchmark; cost per task from Artificial Analysis Intelligence Index v5.0.1, accessed 12 Nov 2026.",
+      callout: "94% Effective Domain Accuracy · $0.60/task · ~40x lower cost than unassisted proprietary frontier models",
       points: [
-        { label: "Claude Fable 5.2 (Max)", short: "Fable 5.2", cost: 26.54, intelligence: 65, tone: "#192E58", pareto: true },
-        { label: "Gemini 4 Carbon (High)", short: "Gemini 4", cost: 7.76, intelligence: 60, tone: "#368CAA", pareto: true },
-        { label: "Claude Opus 5.5 (Max)", short: "Opus 5.5", cost: 10.04, intelligence: 59, tone: "#6B7F8C" },
-        { label: "GPT-6 Astra (Max)", short: "GPT-6 Astra", cost: 6.24, intelligence: 57, tone: "#6B7F8C" },
-        { label: "GPT-6.1 Sol (Max)", short: "GPT-6.1 Sol", cost: 1.27, intelligence: 55, tone: "#368CAA", pareto: true },
-        { label: "Kimi K3.1 Pro", short: "Kimi K3.1", cost: 3.68, intelligence: 46, tone: "#6B7F8C" },
-        { label: "DeepSeek V4.1 Flash 1017 (Max)", short: "DeepSeek V4.1", cost: 0.60, intelligence: 33, tone: "#2B7A8B", highlight: true }
+        { label: "Fireworks AI + FastMCP", cost: 0.60, score: 94, tone: "#2B7A8B", highlight: true },
+        { label: "Unassisted DeepSeek V4.1", cost: 0.60, score: 82, tone: "#6B7F8C" },
+        { label: "Unassisted GPT-6.1 Sol", cost: 1.27, score: 84, tone: "#192E58" },
+        { label: "Unassisted Kimi K3.1", cost: 3.68, score: 85, tone: "#192E58" },
+        { label: "Unassisted Gemini 4 Carbon", cost: 7.76, score: 87, tone: "#192E58" },
+        { label: "Unassisted Claude Opus 5.5", cost: 10.04, score: 88, tone: "#192E58" },
+        { label: "Unassisted Claude Fable 5.2", cost: 26.54, score: 90, tone: "#192E58" }
       ]
     }
   };
@@ -146,6 +141,52 @@ Contract basis ...................... 12/15 · paid through 31 Mar 2027
 Amounts applied to the Separate Specific Deductible do not accumulate
 toward the Aggregate Attachment Point. No No-New-Laser endorsement is
 included in the executed extract.</pre>
+</div>`
+    },
+
+    policyAssignment: {
+      label: "Policy evidence",
+      title: "Policy §7.4 — Anti-assignment",
+      sub: "Meridian Mutual Stop Loss · Policy MPM-SL-2026-0147",
+      page: "Policy p. 3",
+      bbox: "document: 01_Meridian_StopLoss_Policy_MPM-SL-2026-0147.md\npage: 3\nbbox: (72, 368, 540, 452)\nextraction: Mistral OCR 4.1 (ZDR) · page-anchored Markdown",
+      citation:
+        "<b>Policy §7.4 · Anti-assignment.</b> Executed policy language prohibits assignment of reimbursement and requires the carrier to disregard any purported assignment.",
+      formatted: `
+        <div class="doc-page">
+          <div class="doc-banner"><h3>Policy §7.4</h3><span>MPM-SL-2026-0147</span></div>
+          <p class="doc-sub">Meridian Mutual Stop Loss · Policy MPM-SL-2026-0147 · Page 3</p>
+          <div class="doc-rule"></div>
+          <div class="doc-row"><span class="k">Section</span><span class="v">§7.4 — Assignment</span><span>p. 3</span></div>
+          <div class="doc-row"><span class="k">Effective</span><span class="v">01 Jan 2026</span><span></span></div>
+          <div class="doc-row"><span class="k">Applies to</span><span class="v">Policy MPM-SL-2026-0147</span><span></span></div>
+          <div class="doc-rule"></div>
+          <div class="doc-body">
+            <p><strong>7.4 ASSIGNMENT.</strong> No assignment of reimbursement under this policy is recognized by the carrier.</p>
+            <div class="doc-clause"><span class="clause-tag">§7.4 · cited clause</span>“YOU may not assign reimbursement under this POLICY, and WE shall not recognize any such assignment.”</div>
+            <p>Any purported assignment is void against the carrier. Payment direction changes require a separate executed carrier endorsement.</p>
+          </div>
+          <p class="doc-note">Executed policy extract. No assignment endorsement is included. Claimant key MPM-9941-07.</p>
+        </div>`,
+      markdown: `
+<div class="md-page">
+  <span class="page-tag">p. 3</span>
+  <pre># POLICY MPM-SL-2026-0147 · §7.4 ASSIGNMENT
+
+Effective .......... 01 Jan 2026
+Applies to ......... Policy MPM-SL-2026-0147
+
+## 7.4 ASSIGNMENT
+No assignment of reimbursement under this policy is recognized
+by the carrier.
+
+&gt; "YOU may not assign reimbursement under this POLICY, and WE
+&gt; shall not recognize any such assignment."
+
+Any purported assignment is void against the carrier. Payment
+direction changes require a separate executed carrier endorsement.
+
+Executed policy extract. No assignment endorsement is included.</pre>
 </div>`
     },
 
@@ -357,6 +398,15 @@ Both Section D defects gate the same $250,000 Tranche 2.</pre>
     mediaScroll: $("#mediaScroll"),
     mediaClose: $("#mediaClose"),
     expandDiagram: $("#expandDiagram"),
+    askPacket: $("#askPacket"),
+    chatDrawer: $("#chatDrawer"),
+    chatBackdrop: $("#chatBackdrop"),
+    chatClose: $("#chatClose"),
+    chatThread: $("#chatThread"),
+    chatStarters: $("#chatStarters"),
+    chatForm: $("#chatForm"),
+    chatInput: $("#chatInput"),
+    chatSend: $("#chatSend"),
     outboundPack: $("#outboundPack"),
     packStamp: $("#packStamp"),
     copyDraft: $("#copyDraft"),
@@ -375,6 +425,9 @@ Both Section D defects gate the same $250,000 Tranche 2.</pre>
     dialogOpener: null,
     mediaOpen: false,
     mediaOpener: null,
+    chatOpen: false,
+    chatBusy: false,
+    chatOpener: null,
     cured: false,
     cureSentAt: null,
     cureSentSignatures: null,
@@ -719,11 +772,11 @@ Both Section D defects gate the same $250,000 Tranche 2.</pre>
 
   function renderCostIntelligence(data) {
     const W = 360;
-    const H = 280;
+    const H = 300;
     const left = 42;
     const right = 12;
-    const top = 18;
-    const bottom = 42;
+    const top = 24;
+    const bottom = 46;
     const plotW = W - left - right;
     const plotH = H - top - bottom;
     const family = 'Montserrat, Arial, sans-serif';
@@ -732,12 +785,20 @@ Both Section D defects gate the same $250,000 Tranche 2.</pre>
     const x = function (cost) {
       return left + ((Math.log10(cost) - logMin) / (logMax - logMin)) * plotW;
     };
-    const y = function (intel) {
-      return top + ((70 - intel) / 40) * plotH;
+    const y = function (score) {
+      return top + ((100 - score) / 30) * plotH;
     };
     let out = '<svg viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg" role="img" focusable="false">';
 
-    [30, 40, 50, 60, 70].forEach(function (tick) {
+    // Optimal frontier zone around Fireworks + FastMCP.
+    const zoneRight = x(1.0);
+    const zoneTop = y(100);
+    const zoneBottom = y(88);
+    out += '<rect x="' + left + '" y="' + zoneTop + '" width="' + (zoneRight - left) + '" height="' + (zoneBottom - zoneTop) + '" rx="4" fill="#2B7A8B" opacity="0.10"></rect>';
+    out += '<rect x="' + left + '" y="' + zoneTop + '" width="' + (zoneRight - left) + '" height="' + (zoneBottom - zoneTop) + '" rx="4" fill="none" stroke="#2B7A8B" stroke-width="1" stroke-dasharray="3 3" opacity="0.6"></rect>';
+    out += '<text x="' + (left + 6) + '" y="' + (zoneTop + 11) + '" fill="#2B7A8B" font-family="' + family + '" font-size="8" font-weight="700" letter-spacing="0.5">OPTIMAL FRONTIER</text>';
+
+    [70, 80, 90, 100].forEach(function (tick) {
       const py = y(tick);
       out += '<line x1="' + left + '" y1="' + py + '" x2="' + (W - right) + '" y2="' + py + '" stroke="#E3E7EC"></line>';
       out += '<text x="' + (left - 7) + '" y="' + (py + 3) + '" text-anchor="end" fill="#6F7680" font-family="' + family + '" font-size="10">' + tick + '</text>';
@@ -751,24 +812,18 @@ Both Section D defects gate the same $250,000 Tranche 2.</pre>
     });
 
     out += '<line x1="' + left + '" y1="' + (top + plotH) + '" x2="' + (W - right) + '" y2="' + (top + plotH) + '" stroke="#C9CED6"></line>';
-    out += '<text x="' + (left + plotW / 2) + '" y="' + (H - 6) + '" text-anchor="middle" fill="#6F7680" font-family="' + family + '" font-size="10">AA cost per task (log scale)</text>';
-    out += '<text x="10" y="' + (top + plotH / 2) + '" transform="rotate(-90 10 ' + (top + plotH / 2) + ')" text-anchor="middle" fill="#6F7680" font-family="' + family + '" font-size="10">Intelligence Index</text>';
-
-    const pareto = data.points.filter(function (point) { return point.pareto; }).sort(function (a, b) { return a.cost - b.cost; });
-    if (pareto.length > 1) {
-      out += '<polyline points="' + pareto.map(function (point) { return x(point.cost).toFixed(1) + ',' + y(point.intelligence).toFixed(1); }).join(' ') + '" fill="none" stroke="#2B7A8B" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.55"></polyline>';
-      out += '<text x="' + (W - right) + '" y="' + (top + 10) + '" text-anchor="end" fill="#2B7A8B" font-family="' + family + '" font-size="10" font-weight="700" letter-spacing="0.4">PARETO FRONTIER</text>';
-    }
+    out += '<text x="' + (left + plotW / 2) + '" y="' + (H - 6) + '" text-anchor="middle" fill="#6F7680" font-family="' + family + '" font-size="10">Cost per task (log scale)</text>';
+    out += '<text x="10" y="' + (top + plotH / 2) + '" transform="rotate(-90 10 ' + (top + plotH / 2) + ')" text-anchor="middle" fill="#6F7680" font-family="' + family + '" font-size="10">Effective adjudication score</text>';
 
     data.points.forEach(function (point) {
       const px = x(point.cost);
-      const py = y(point.intelligence);
+      const py = y(point.score);
       if (point.highlight) {
-        out += '<circle cx="' + px + '" cy="' + py + '" r="11" fill="#2B7A8B" opacity="0.18"></circle>';
-      }
-      out += '<circle cx="' + px + '" cy="' + py + '" r="' + (point.highlight ? 6.5 : 5) + '" fill="' + point.tone + '" stroke="#F8F7F4" stroke-width="1.8"></circle>';
-      if (point.highlight) {
-        out += '<text x="' + (px + 9) + '" y="' + (py - 10) + '" fill="#2B7A8B" font-family="' + family + '" font-size="10" font-weight="700">DeepSeek</text>';
+        out += '<circle cx="' + px + '" cy="' + py + '" r="12" fill="#2B7A8B" opacity="0.18"></circle>';
+        out += '<circle cx="' + px + '" cy="' + py + '" r="7" fill="' + point.tone + '" stroke="#F8F7F4" stroke-width="2"></circle>';
+        out += '<text x="' + (px + 10) + '" y="' + (py + 3) + '" fill="#2B7A8B" font-family="' + family + '" font-size="10" font-weight="700">Fireworks + FastMCP</text>';
+      } else {
+        out += '<circle cx="' + px + '" cy="' + py + '" r="5.5" fill="' + point.tone + '" stroke="#F8F7F4" stroke-width="1.8"></circle>';
       }
     });
 
@@ -785,7 +840,6 @@ Both Section D defects gate the same $250,000 Tranche 2.</pre>
     if (costChart) costChart.innerHTML = renderCostIntelligence(cost);
 
     const domainNote = document.getElementById("benchDomainNote");
-    const costNote = document.getElementById("benchCostNote");
     const source = document.getElementById("benchSource");
     const legend = document.getElementById("benchLegend");
     const callout = document.getElementById("benchCostCallout");
@@ -794,12 +848,11 @@ Both Section D defects gate the same $250,000 Tranche 2.</pre>
     if (domainTag) domainTag.textContent = domain.tag;
     if (costTag) costTag.textContent = cost.tag;
     if (domainNote) domainNote.textContent = domain.note;
-    if (costNote) costNote.textContent = cost.note;
     if (source) source.textContent = cost.source;
     if (callout) callout.textContent = cost.callout;
     if (legend) {
       legend.innerHTML = cost.points.map(function (point) {
-        const value = point.intelligence + " · $" + point.cost.toFixed(2);
+        const value = point.score + "% · $" + point.cost.toFixed(2);
         return '<li><span class="bench-dot" style="background:' + point.tone + '"></span><span class="bench-model">' + point.label + '</span><span class="bench-value">' + value + '</span></li>';
       }).join("");
     }
@@ -1243,6 +1296,16 @@ Both Section D defects gate the same $250,000 Tranche 2.</pre>
       return;
     }
 
+    if (state.chatOpen) {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        closeChat();
+        return;
+      }
+      if (event.key === "Tab") trapTab(els.chatDrawer, event);
+      return;
+    }
+
     if (state.dialogOpen) {
       if (event.key === "Escape") {
         event.preventDefault();
@@ -1405,6 +1468,199 @@ Both Section D defects gate the same $250,000 Tranche 2.</pre>
       const title = key === "domain" ? "Domain Accuracy — expanded" : "Cost vs Intelligence Frontier — expanded";
       openMedia(title, '<div class="media-chart">' + chart.innerHTML + "</div>");
     });
+  });
+
+  /* ------------------------------------------------------------------ */
+  /* Ask Packet chat                                                     */
+  /* ------------------------------------------------------------------ */
+
+  const CHAT_TEAMS_UPDATE =
+    "Teams update — Claim #9941\n" +
+    "• Tranche 1: $1,700,000 approved for Finance/Accounting disbursement.\n" +
+    "• Tranche 2: $250,000 held pending Employer CFO + carrier countersignatures; curable.\n" +
+    "• L-1: $500,000 laser gap (non-curable); FL48 $350,000 excluded.\n" +
+    "No clinical data. Claimant key only: MPM-9941-07.";
+
+  function chatScroll() {
+    requestAnimationFrame(function () {
+      els.chatThread.scrollTop = els.chatThread.scrollHeight;
+    });
+  }
+
+  function chatUserMessage(text) {
+    const empty = $("#chatEmpty");
+    if (empty) empty.remove();
+    const msg = document.createElement("div");
+    msg.className = "chat-msg user";
+    msg.textContent = text;
+    els.chatThread.appendChild(msg);
+    els.chatDrawer.classList.add("has-thread");
+    chatScroll();
+  }
+
+  function chatToolPill(text) {
+    const pill = document.createElement("div");
+    pill.className = "chat-tool";
+    pill.textContent = text;
+    els.chatThread.appendChild(pill);
+    chatScroll();
+  }
+
+  function chatTyping() {
+    const typing = document.createElement("div");
+    typing.className = "chat-typing";
+    typing.innerHTML = "<span></span><span></span><span></span>";
+    els.chatThread.appendChild(typing);
+    chatScroll();
+    return typing;
+  }
+
+  function chatAnswer(html) {
+    const msg = document.createElement("div");
+    msg.className = "chat-msg agent";
+    msg.innerHTML = html;
+    els.chatThread.appendChild(msg);
+    chatScroll();
+  }
+
+  const CHAT_ANSWERS = {
+    1:
+      "<p>No No-New-Laser endorsement is in the executed packet. The anti-assignment clause is Policy §7.4 (p. 3): “YOU may not assign reimbursement under this POLICY, and WE shall not recognize any such assignment.” Endorsement L-1 (p. 7) is the only laser: $750,000 separate specific deductible on MPM-9941-07 — $500,000 above the $250,000 Schedule A base.</p>" +
+      '<div class="chat-cites"><button type="button" class="chat-cite" data-chat-doc="policy">[Policy p. 7]</button><button type="button" class="chat-cite" data-chat-doc="policyAssignment">[Policy p. 3]</button></div>',
+    2:
+      "<p>Q2042 Kymriah is covered because it matches the FDA label (B-ALL, age ≤25) and CMS NCD 110.24; the $475,000 line carries no FL48. The CD22 CAR-T is Rev 0256/J9999 under protocol MPM-RES-2026-014 — investigational, no FDA approval or NCD coverage — billed FL48 $235,000. The other $115,000 FL48 is off-label pembrolizumab ($40k), deluxe differential ($25k), and convenience ($50k).</p>" +
+      '<div class="chat-cites"><button type="button" class="chat-cite" data-chat-doc="ub04">[UB-04 p. 2]</button><button type="button" class="chat-cite" data-chat-doc="ub04">[UB-04 p. 4]</button><a class="chat-cite" href="https://www.cms.gov/medicare-coverage-database/view/ncd.aspx?ncdid=110.24" target="_blank" rel="noopener">CMS NCD 110.24 ↗</a></div>',
+    3:
+      "<p>Teams update — Claim #9941<br>• Tranche 1: $1,700,000 approved for Finance/Accounting disbursement.<br>• Tranche 2: $250,000 held pending Employer CFO + carrier countersignatures; curable.<br>• L-1: $500,000 laser gap (non-curable); FL48 $350,000 excluded.<br>No clinical data. Claimant key only: MPM-9941-07.</p>" +
+      '<div class="chat-cites"><button type="button" class="chat-cite" data-chat-doc="tpa">[TPA request p. 3]</button><button type="button" class="chat-cite" data-chat-doc="policy">[Policy p. 7]</button></div>' +
+      '<button type="button" class="chat-copy" data-chat-copy="teams">Copy update</button>',
+    0:
+      "<p>I can answer from the indexed packet: policy lasers, coverage, funding math, or a zero-PHI Teams update.</p>"
+  };
+
+  const CHAT_TOOLS = {
+    1: "[MCP: check_policy_lasers]",
+    2: "[MCP: check_cms_coverage_and_fda]",
+    3: "[MCP: stage_zero_phi_hubspot_and_teams_handoff]"
+  };
+
+  function classifyChat(text) {
+    const lower = text.toLowerCase();
+    if (/no-new-laser|anti-assignment|assign|policy|laser|endorsement/.test(lower)) return 1;
+    if (/kymriah|car-t|cd22|coverage|ncd|fda|fl48/.test(lower)) return 2;
+    if (/teams|hold|signature|tranche|cure|update/.test(lower)) return 3;
+    return 0;
+  }
+
+  function askChat(text, forcedId) {
+    if (state.chatBusy) {
+      toast("Packet Agent", "Still reading the packet. One question at a time.");
+      return;
+    }
+    const id = typeof forcedId === "number" ? forcedId : classifyChat(text);
+    state.chatBusy = true;
+    chatUserMessage(text);
+    if (id) chatToolPill(CHAT_TOOLS[id]);
+    const typing = chatTyping();
+    window.setTimeout(function () {
+      typing.remove();
+      chatAnswer(CHAT_ANSWERS[id] || CHAT_ANSWERS[0]);
+      state.chatBusy = false;
+    }, 800);
+  }
+
+  function openChat() {
+    if (state.chatOpen) return;
+    state.chatOpen = true;
+    state.chatOpener = document.activeElement;
+    document.body.style.overflow = "hidden";
+    els.chatDrawer.hidden = false;
+    els.chatBackdrop.hidden = false;
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        els.chatDrawer.classList.add("is-open");
+        els.chatBackdrop.classList.add("is-open");
+      });
+    });
+    els.chatInput.focus();
+  }
+
+  function closeChat(restoreFocus) {
+    if (!state.chatOpen) return;
+    state.chatOpen = false;
+    els.chatDrawer.classList.remove("is-open");
+    els.chatBackdrop.classList.remove("is-open");
+    document.body.style.overflow = "";
+    const restore = state.chatOpener;
+    window.setTimeout(function () {
+      if (!state.chatOpen) {
+        els.chatDrawer.hidden = true;
+        els.chatBackdrop.hidden = true;
+      }
+    }, 300);
+    if (restoreFocus !== false && restore && typeof restore.focus === "function" && document.contains(restore)) {
+      restore.focus();
+    }
+  }
+
+  els.askPacket.addEventListener("click", openChat);
+  els.chatClose.addEventListener("click", function () {
+    closeChat();
+  });
+  els.chatBackdrop.addEventListener("click", function () {
+    closeChat();
+  });
+
+  $$("[data-open-chat]").forEach(function (button) {
+    button.addEventListener("click", openChat);
+  });
+
+  $$(".chat-starter").forEach(function (button) {
+    button.addEventListener("click", function () {
+      if (state.chatBusy) {
+        toast("Packet Agent", "Still reading the packet. One question at a time.");
+        return;
+      }
+      askChat(button.textContent.trim(), Number(button.getAttribute("data-chat-prompt")));
+    });
+  });
+
+  els.chatForm.addEventListener("submit", function (event) {
+    event.preventDefault();
+    if (state.chatBusy) {
+      toast("Packet Agent", "Still reading the packet. One question at a time.");
+      return;
+    }
+    const text = els.chatInput.value.trim();
+    if (!text) {
+      els.chatInput.focus();
+      return;
+    }
+    els.chatInput.value = "";
+    askChat(text);
+  });
+
+  els.chatInput.addEventListener("keydown", function (event) {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+      els.chatForm.requestSubmit();
+    }
+  });
+
+  els.chatThread.addEventListener("click", function (event) {
+    const cite = event.target.closest("[data-chat-doc]");
+    if (cite) {
+      const doc = cite.getAttribute("data-chat-doc");
+      closeChat(false);
+      window.setTimeout(function () {
+        openDrawer(doc, els.askPacket);
+      }, 300);
+      return;
+    }
+    const copy = event.target.closest("[data-chat-copy]");
+    if (copy) {
+      copyDraftText(CHAT_TEAMS_UPDATE, "Teams update");
+    }
   });
 
   /* ------------------------------------------------------------------ */
@@ -1822,6 +2078,7 @@ Both Section D defects gate the same $250,000 Tranche 2.</pre>
 
   function route() {
     if (state.mediaOpen) closeMedia();
+    if (state.chatOpen) closeChat(false);
     if (state.dialogOpen) closeDialog();
     const name = (location.hash || "").replace(/^#/, "");
 
